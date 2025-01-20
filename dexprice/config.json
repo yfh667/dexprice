@@ -1,0 +1,760 @@
+{
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "cache_id": "my_profile2",
+      "store_fakeip": true
+    },
+    "clash_api": {
+      "external_ui": "ui",
+      "external_controller": "0.0.0.0:9090",
+      "external_ui_download_detour": "Proxy",
+      "default_mode": "rule"
+    }
+  },
+  "log": {
+    "disabled": true,
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "google",
+        "address": "tls://8.8.8.8",
+        "detour": "Proxy"
+      },
+      {
+        "tag": "local-dns",
+        "address": "tls://223.5.5.5",
+        "detour": "direct"
+      },
+      {
+        "tag": "fakeip-dns",
+        "address": "fakeip"
+      },
+      {
+        "tag": "block-dns",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "server": "local-dns"
+      },
+      {
+        "rule_set": [
+          "geosite-cloudflare",
+          "geosite-google"
+        ],
+        "rewrite_ttl": 1,
+        "server": "fakeip-dns"
+      },
+      {
+        "domain_suffix": [
+          "edu.cn",
+          "gov.cn",
+          "mil.cn",
+          "ac.cn",
+          "com.cn",
+          "net.cn",
+          "org.cn",
+          "\u4e2d\u56fd",
+          "\u4e2d\u570b"
+        ],
+        "server": "local-dns"
+      },
+      {
+        "rule_set": [
+          "geosite-cn",
+          "geosite-icloud@cn",
+          "geosite-apple@cn"
+        ],
+        "server": "local-dns"
+      },
+      {
+        "query_type": [
+          "A"
+        ],
+        "rewrite_ttl": 1,
+        "server": "fakeip-dns"
+      }
+    ],
+    "strategy": "ipv4_only",
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15"
+    }
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "::",
+      "listen_port": 8888,
+      "sniff": true
+    },
+    {
+      "type": "redirect",
+      "tag": "redirect-in",
+      "listen": "::",
+      "sniff_override_destination": false,
+      "listen_port": 9887,
+      "sniff": true
+    },
+    {
+      "type": "tun",
+      "inet4_address": "172.19.0.1/30",
+      "stack": "system",
+      "sniff": true,
+      "auto_route": true,
+      "sniff_override_destination": false,
+      "gso": false
+    },
+    {
+      "type": "tproxy",
+      "tag": "tproxy-in",
+      "listen": "::",
+      "listen_port": 9888,
+      "sniff_override_destination": false,
+      "sniff": true
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "Proxy",
+      "outbounds": [
+        "\ud83c\uddfa\ud83c\uddf8 hneko \u7f8e\u56fd",
+        "\ud83c\uddef\ud83c\uddf5 hneko \u65e5\u672c",
+        "\ud83c\uddf8\ud83c\uddec hneko \u65b0\u52a0\u5761",
+        "\u2601\ufe0f hneko",
+        "\u279c Direct"
+      ],
+      "interrupt_exist_connections": true,
+      "type": "selector",
+      "default": "\ud83c\uddfa\ud83c\uddf8 hneko \u7f8e\u56fd"
+    },
+    {
+      "tag": "Cloudflare",
+      "outbounds": [
+        "Proxy",
+        "\ud83c\uddfa\ud83c\uddf8 hneko \u7f8e\u56fd",
+        "\ud83c\uddef\ud83c\uddf5 hneko \u65e5\u672c",
+        "\ud83c\uddf8\ud83c\uddec hneko \u65b0\u52a0\u5761",
+        "\u2601\ufe0f hneko",
+        "\u279c Direct"
+      ],
+      "interrupt_exist_connections": true,
+      "type": "selector"
+    },
+    {
+      "tag": "Google",
+      "outbounds": [
+        "Proxy",
+        "\ud83c\uddfa\ud83c\uddf8 hneko \u7f8e\u56fd",
+        "\ud83c\uddef\ud83c\uddf5 hneko \u65e5\u672c",
+        "\ud83c\uddf8\ud83c\uddec hneko \u65b0\u52a0\u5761",
+        "\u2601\ufe0f hneko",
+        "\u279c Direct"
+      ],
+      "interrupt_exist_connections": true,
+      "type": "selector"
+    },
+    {
+      "tag": "\ud83c\uddfa\ud83c\uddf8 hneko \u7f8e\u56fd",
+      "outbounds": [
+        "\u7f8e\u56fd 1 | \u730e\u6237\u5ea7",
+        "\u7f8e\u56fd 2 | \u730e\u6237\u5ea7",
+        "\u7f8e\u56fd 1 | \u4e13\u7ebf",
+        "\u7f8e\u56fd 2 | \u4e13\u7ebf",
+        "\u7f8e\u56fd 3 | \u4e13\u7ebf"
+      ],
+      "type": "urltest",
+      "url": "https://www.gstatic.com/generate_204",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    },
+    {
+      "tag": "\ud83c\uddef\ud83c\uddf5 hneko \u65e5\u672c",
+      "outbounds": [
+        "\u65e5\u672c 1 | \u4e13\u7ebf",
+        "\u65e5\u672c 2 | \u4e13\u7ebf",
+        "\u65e5\u672c 3 | \u4e13\u7ebf",
+        "\u65e5\u672c 4 | \u4e13\u7ebf",
+        "\u65e5\u672c 5 | \u4e13\u7ebf",
+        "\u65e5\u672c 6 | \u4e13\u7ebf",
+        "\u65e5\u672c 7 | \u4e13\u7ebf",
+        "\u65e5\u672c 8 | \u4e13\u7ebf"
+      ],
+      "type": "urltest",
+      "url": "https://www.gstatic.com/generate_204",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    },
+    {
+      "tag": "\ud83c\uddf8\ud83c\uddec hneko \u65b0\u52a0\u5761",
+      "outbounds": [
+        "\u65b0\u52a0\u5761 1 | \u730e\u6237\u5ea7",
+        "\u65b0\u52a0\u5761 2 | \u730e\u6237\u5ea7",
+        "\u65b0\u52a0\u5761 1 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 2 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 3 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 4 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 5 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 6 | \u4e13\u7ebf"
+      ],
+      "type": "urltest",
+      "url": "https://www.gstatic.com/generate_204",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    },
+    {
+      "tag": "\u2601\ufe0f hneko",
+      "outbounds": [
+        "\u5269\u4f59\u6d41\u91cf\uff1a593.73 GB",
+        "\u8ddd\u79bb\u4e0b\u6b21\u91cd\u7f6e\u5269\u4f59\uff1a27 \u5929",
+        "\u5957\u9910\u5230\u671f\uff1a2024-11-27",
+        "\u4f7f\u7528\u524d\u5148\u66f4\u65b0\u8ba2\u9605\uff01\uff01\uff01",
+        "\u7f8e\u56fd 1 | \u730e\u6237\u5ea7",
+        "\u7f8e\u56fd 2 | \u730e\u6237\u5ea7",
+        "\u65b0\u52a0\u5761 1 | \u730e\u6237\u5ea7",
+        "\u65b0\u52a0\u5761 2 | \u730e\u6237\u5ea7",
+        "\u9996\u5c14 1 | \u730e\u6237\u5ea7",
+        "\u7f8e\u56fd 1 | \u4e13\u7ebf",
+        "\u7f8e\u56fd 2 | \u4e13\u7ebf",
+        "\u7f8e\u56fd 3 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 1 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 2 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 3 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 4 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 5 | \u4e13\u7ebf",
+        "\u65b0\u52a0\u5761 6 | \u4e13\u7ebf",
+        "\u65e5\u672c 1 | \u4e13\u7ebf",
+        "\u65e5\u672c 2 | \u4e13\u7ebf",
+        "\u65e5\u672c 3 | \u4e13\u7ebf",
+        "\u65e5\u672c 4 | \u4e13\u7ebf",
+        "\u65e5\u672c 5 | \u4e13\u7ebf",
+        "\u65e5\u672c 6 | \u4e13\u7ebf",
+        "\u65e5\u672c 7 | \u4e13\u7ebf",
+        "\u65e5\u672c 8 | \u4e13\u7ebf"
+      ],
+      "interrupt_exist_connections": true,
+      "type": "selector"
+    },
+    {
+      "type": "direct",
+      "tag": "\u279c Direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "tag": "\u5269\u4f59\u6d41\u91cf\uff1a593.73 GB",
+      "server": "107.175.32.51",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u8ddd\u79bb\u4e0b\u6b21\u91cd\u7f6e\u5269\u4f59\uff1a27 \u5929",
+      "server": "107.175.32.51",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u5957\u9910\u5230\u671f\uff1a2024-11-27",
+      "server": "107.175.32.51",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u4f7f\u7528\u524d\u5148\u66f4\u65b0\u8ba2\u9605\uff01\uff01\uff01",
+      "server": "107.175.32.51",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u7f8e\u56fd 1 | \u730e\u6237\u5ea7",
+      "server": "www.visa.com.sg",
+      "server_port": 8080,
+      "type": "vless",
+      "uuid": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "enabled": true,
+        "server_name": "",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/study",
+        "headers": {
+          "host": "uu11.putao666.top"
+        }
+      }
+    },
+    {
+      "tag": "\u7f8e\u56fd 2 | \u730e\u6237\u5ea7",
+      "server": "www.visa.com.sg",
+      "server_port": 80,
+      "type": "vless",
+      "uuid": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "enabled": true,
+        "server_name": "",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/study",
+        "headers": {
+          "host": "uu11.putao666.top"
+        }
+      }
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 1 | \u730e\u6237\u5ea7",
+      "server": "www.visa.com.sg",
+      "server_port": 8080,
+      "type": "vless",
+      "uuid": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "enabled": true,
+        "server_name": "",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/study",
+        "headers": {
+          "host": "ss1.putao666.top"
+        }
+      }
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 2 | \u730e\u6237\u5ea7",
+      "server": "www.visa.com.sg",
+      "server_port": 80,
+      "type": "vless",
+      "uuid": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "enabled": true,
+        "server_name": "",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/study",
+        "headers": {
+          "host": "ss1.putao666.top"
+        }
+      }
+    },
+    {
+      "tag": "\u9996\u5c14 1 | \u730e\u6237\u5ea7",
+      "server": "www.visa.com.sg",
+      "server_port": 8080,
+      "type": "vless",
+      "uuid": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "enabled": true,
+        "server_name": "",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/study",
+        "headers": {
+          "host": "ser1.putao666.top"
+        }
+      }
+    },
+    {
+      "tag": "\u7f8e\u56fd 1 | \u4e13\u7ebf",
+      "server": "107.175.32.51",
+      "server_port": 40002,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u7f8e\u56fd 2 | \u4e13\u7ebf",
+      "server": "107.175.213.204",
+      "server_port": 40003,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u7f8e\u56fd 3 | \u4e13\u7ebf",
+      "server": "107.175.213.204",
+      "server_port": 40004,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 1 | \u4e13\u7ebf",
+      "server": "172.104.39.213",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 2 | \u4e13\u7ebf",
+      "server": "172.104.39.213",
+      "server_port": 40002,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 3 | \u4e13\u7ebf",
+      "server": "139.177.187.212",
+      "server_port": 40003,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 4 | \u4e13\u7ebf",
+      "server": "139.177.187.212",
+      "server_port": 40004,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 5 | \u4e13\u7ebf",
+      "server": "172.104.55.107",
+      "server_port": 40005,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65b0\u52a0\u5761 6 | \u4e13\u7ebf",
+      "server": "172.104.55.107",
+      "server_port": 40006,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 1 | \u4e13\u7ebf",
+      "server": "139.162.112.66",
+      "server_port": 40001,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 2 | \u4e13\u7ebf",
+      "server": "139.162.112.66",
+      "server_port": 40002,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 3 | \u4e13\u7ebf",
+      "server": "139.162.112.120",
+      "server_port": 40003,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 4 | \u4e13\u7ebf",
+      "server": "139.162.112.120",
+      "server_port": 40004,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 5 | \u4e13\u7ebf",
+      "server": "139.162.112.210",
+      "server_port": 40005,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 6 | \u4e13\u7ebf",
+      "server": "139.162.112.210",
+      "server_port": 40006,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": ""
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 7 | \u4e13\u7ebf",
+      "server": "172.105.217.107",
+      "server_port": 20000,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": "www.bing.com"
+      },
+      "tcp_fast_open": false
+    },
+    {
+      "tag": "\u65e5\u672c 8 | \u4e13\u7ebf",
+      "server": "172.105.217.107",
+      "server_port": 30000,
+      "type": "hysteria2",
+      "password": "af6762ac-f744-45e6-ac1d-787355b33285",
+      "tls": {
+        "insecure": true,
+        "enabled": true,
+        "server_name": "www.bing.com"
+      },
+      "tcp_fast_open": false
+    }
+  ],
+  "route": {
+    "rule_set": [
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "geosite-cloudflare",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cloudflare.srs"
+      },
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "geosite-google",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/google.srs"
+      },
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "GeoIP2-CN",
+        "url": "https://wiki.jokin.uk/cnip2.srs"
+      },
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "geosite-cn",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/cn.srs"
+      },
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "geosite-icloud@cn",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/icloud@cn.srs"
+      },
+      {
+        "type": "remote",
+        "format": "binary",
+        "download_detour": "Proxy",
+        "tag": "geosite-apple@cn",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/apple@cn.srs"
+      }
+    ],
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 853
+          },
+          {
+            "network": "udp",
+            "port": 443
+          },
+          {
+            "protocol": "stun"
+          }
+        ],
+        "outbound": "block"
+      },
+      {
+        "domain_suffix": [
+          "edu.cn",
+          "gov.cn",
+          "mil.cn",
+          "ac.cn",
+          "com.cn",
+          "net.cn",
+          "org.cn",
+          "\u4e2d\u56fd",
+          "\u4e2d\u570b"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "Proxy"
+      },
+      {
+        "rule_set": "geosite-cloudflare",
+        "outbound": "Cloudflare"
+      },
+      {
+        "rule_set": "geosite-google",
+        "outbound": "Google"
+      },
+      {
+        "rule_set": [
+          "GeoIP2-CN",
+          "geosite-cn",
+          "geosite-icloud@cn",
+          "geosite-apple@cn"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "auto_detect_interface": true,
+    "final": "Proxy"
+  }
+}
