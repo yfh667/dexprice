@@ -10,7 +10,7 @@ import dexprice.modules.PriceMonitor.dexscreen_parrel as dexscreen_parrel
 import dexprice.modules.utilis.define as define
 import dexprice.modules.proxy.proxydefine as proxydefine
 
-import dexprice.modules.db.insert_db_linshi as insert_db
+import dexprice.modules.db.insert_db as insert_db
 
 import os
 import dexprice.modules.utilis.findroot as findroot
