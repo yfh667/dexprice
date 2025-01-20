@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     ca_addresses = ["HPueqQjSgaSatMBKrvBvAnRmc6jnr51cPM1EjUJVpump"]
 
-    proxy_port = 50013  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
+    proxy_port = 50048  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
 
  #   chain_id = "solana"  # 这里使用示例的链 ID
     # print(CApairaddress)
