@@ -9,7 +9,7 @@ import  dexprice.modules.utilis.define as define
 # 插入数据的函数
 
 
-class SQLiteDatabase_linshi(insert_db.DatabaseInterface):
+class SQLiteDatabase(insert_db.DatabaseInterface):
     def __init__(self, db_folder, db_name):
         self.db_path = os.path.join(db_folder, db_name)
         self.conn = None

@@ -2,7 +2,7 @@ import dexprice.modules.PriceMonitor.dexscreen_parrel as dexscreen_parrel
 import dexprice.modules.utilis.define as define
 
 #import dexprice.modules.db.insert_db as insert_db
-import dexprice.modules.db.insert_db_linshi as insert_db
+import dexprice.modules.db.insert_db as insert_db
 import dexprice.modules.OHLCV.geck_parrel as geck_parrel
 import dexprice.modules.PriceMonitor.tokenflitter as tokenflitter
 from dexprice.modules.utilis.define import FilterCriteria
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     db_folder = DATA_FOLDER + '/Project'  # 数据库存储文件夹
 
-    db = insert_db.SQLiteDatabase_linshi(db_folder, db_name + '.db')
+    db = insert_db.SQLiteDatabase(db_folder, db_name + '.db')
     db.connect()
 
     geck_rate = 0.4

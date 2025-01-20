@@ -101,7 +101,7 @@ def initialtoken3(file,progress_callback=None):
 
     db_folder = DATA_FOLDER  # 数据库存储文件夹
     db_name = 'all.db'  # 数据库文件名
-    db = insert_db.SQLiteDatabase_linshi(db_folder, db_name)
+    db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
     for i in range(num_batches):
         start = i * max_batch_size

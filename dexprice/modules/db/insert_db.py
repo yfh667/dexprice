@@ -86,22 +86,23 @@ class DatabaseInterface(ABC):
     @abstractmethod
     def readprice(self, tokenid):
         pass
+
 class SQLiteDatabase(DatabaseInterface):
-    def __init__(self, db_folder, db_name, chainid):
+    def __init__(self, db_folder, db_name):
         self.db_path = os.path.join(db_folder, db_name)
         self.conn = None
-        self.chainid = chainid
+     #   self.chainid = chainid
         self.db_folder = db_folder
         self.db_name = db_name
 
-    def insert_data(self,table_name,  name, ca, pairaddress, creattime):
+    def insert_data(self, table_name,chainid, name, ca, pairaddress, creattime):
         insert_query = f'''
         INSERT INTO {table_name} (chainid, name, ca, pairaddress, creattime)
         VALUES (?, ?, ?, ?, ?);
         '''
         cursor = self.conn.cursor()
         try:
-            cursor.execute(insert_query, (self.chainid, name, ca, pairaddress, creattime))
+            cursor.execute(insert_query, (chainid, name, ca, pairaddress, creattime))
             self.conn.commit()
             print(f"Data inserted successfully for ca: {ca}")
         except sqlite3.IntegrityError as e:
@@ -114,7 +115,7 @@ class SQLiteDatabase(DatabaseInterface):
             pairaddress = OvhlFromDexData.pairaddress
             tokenid = self.FindParetokenid(pairaddress)
             if tokenid:
-                if(OvhlFromDexData):
+                if (OvhlFromDexData):
                     ovhl = define.TokenPriceHistory(
                         tokenid,
                         OvhlFromDexData.open,
@@ -126,6 +127,7 @@ class SQLiteDatabase(DatabaseInterface):
                     )
                     token_price_history_list.append(ovhl)
         return token_price_history_list
+
     def insert_multiple_price_history(self, token_price_history_list):
         table_name = "price_history"
         insert_query = f'''
@@ -155,9 +157,6 @@ class SQLiteDatabase(DatabaseInterface):
         cursor.executemany(insert_query, data_to_insert)
         self.conn.commit()
         print(f"批量插入或更新了 {len(data_to_insert)} 条记录到 {table_name}。")
-
-
-
 
     def close(self):
         if self.conn:
@@ -212,12 +211,13 @@ class SQLiteDatabase(DatabaseInterface):
             if self.conn:
                 self.conn.close()
                 print("Database connection closed.")
+
     def insert_OvhlFromDex(self, OvhlFromDexData: define.OvhlFromDex):
         pairaddress = OvhlFromDexData.pairaddress
         tokenid = self.FindParetokenid(pairaddress)
         if tokenid:
             # 使用 OvhlFromDexData 的属性而不是下标访问
-            if(OvhlFromDexData):
+            if (OvhlFromDexData):
                 ovhl = define.TokenPriceHistory(
                     tokenid,
                     OvhlFromDexData.open,
@@ -248,24 +248,26 @@ class SQLiteDatabase(DatabaseInterface):
             VALUES (?, ?, ?, ?, ?, ?, ?);
             '''
             cursor.execute(insert_query, (tokenpricehistory.tokenid, tokenpricehistory.open, tokenpricehistory.high,
-                                          tokenpricehistory.low, tokenpricehistory.close, tokenpricehistory.time, tokenpricehistory.volume))
+                                          tokenpricehistory.low, tokenpricehistory.close, tokenpricehistory.time,
+                                          tokenpricehistory.volume))
             self.conn.commit()
             print(f"Data inserted into {table_name} successfully.")
         else:
-            print(f"Duplicate entry found for tokenid {tokenpricehistory.tokenid} at time {tokenpricehistory.time}. Skipping insertion.")
-    def insertMultipricehistory(self, tokenpricehistorys:list[define.TokenPriceHistory]):
+            print(
+                f"Duplicate entry found for tokenid {tokenpricehistory.tokenid} at time {tokenpricehistory.time}. Skipping insertion.")
+
+    def insertMultipricehistory(self, tokenpricehistorys: list[define.TokenPriceHistory]):
         table_name = f"price_history"
         for tokenpricehistory in tokenpricehistorys:
             self.insertpricehistory(tokenpricehistory)
 
-
-       # print(f"Data inserted into {table_name} successfully.")
-    def insertMultipricedexscreen(self, TokenInfos:list[define.TokenInfo]):
+    # print(f"Data inserted into {table_name} successfully.")
+    def insertMultipricedexscreen(self, TokenInfos: list[define.TokenInfo]):
         for token in TokenInfos:
             self.insertpricedexscreen(token)
 
-     # get the price from the dexscreen
-    def insertpricedexscreen(self, TokenInfo:define.TokenInfo):
+    # get the price from the dexscreen
+    def insertpricedexscreen(self, TokenInfo: define.TokenInfo):
         table_name = f"pricedexscreen"
 
         # 检查表是否存在，不存在则创建
@@ -281,9 +283,7 @@ class SQLiteDatabase(DatabaseInterface):
         cursor = self.conn.cursor()
         cursor.execute(create_table_query)
 
-
-        tokenid =  self.FindCAtokenid( TokenInfo)
-
+        tokenid = self.FindCAtokenid(TokenInfo)
 
         # 插入数据的 SQL 语句
         insert_query = f'''
@@ -293,15 +293,16 @@ class SQLiteDatabase(DatabaseInterface):
 
         # 执行插入操作
         cursor.execute(insert_query, (
-         tokenid,
-         TokenInfo.price_usd,
+            tokenid,
+            TokenInfo.price_usd,
             TokenInfo.timestamp
         ))
 
         # 提交事务并关闭游标
         self.conn.commit()
         print(f"Data inserted into {table_name} successfully.")
-    def getpricedexscreen(self,  tokenid: int):
+
+    def getpricedexscreen(self, tokenid: int):
         """
     根据给定的 tokenid 从 pricedexscreen 表中检索所有价格记录。
 
@@ -320,11 +321,11 @@ class SQLiteDatabase(DatabaseInterface):
         rows = cursor.fetchall()  # 获取所有符合条件的记录
 
         # 将查询结果转换成 (price, time) 的列表并返回
-        price_records = [(tokenid,row[0], row[1]) for row in rows]
+        price_records = [(tokenid, row[0], row[1]) for row in rows]
 
         return price_records
 
-    def FindCAtokenid(self, TokenInfo:define.TokenInfo):
+    def FindCAtokenid(self, TokenInfo: define.TokenInfo):
         """
         根据 TokenInfo 的 address (CA) 查找对应的 id。
 
@@ -345,7 +346,8 @@ class SQLiteDatabase(DatabaseInterface):
             return result[0]  # 返回找到的 id
         else:
             return None  # 如果找不到则返回 None
-    def FindParetokenid(self, pairaddress:str):
+
+    def FindParetokenid(self, pairaddress: str):
         """
         根据 TokenInfo 的 address (CA) 查找对应的 id。
 
@@ -353,7 +355,7 @@ class SQLiteDatabase(DatabaseInterface):
         :return: 返回对应的 id，若未找到则返回 None
         """
         table_name = 'token_pairs'
-      #  pa = pairaddress
+        #  pa = pairaddress
         if self.cursor is None:
             self.cursor = self.conn.cursor()
 
@@ -366,7 +368,6 @@ class SQLiteDatabase(DatabaseInterface):
             return result[0]  # 返回找到的 id
         else:
             return None  # 如果找不到则返回 None
-
 
     def initialize_table(self):
         # 连接到SQLite数据库
@@ -424,6 +425,7 @@ class SQLiteDatabase(DatabaseInterface):
         finally:
             # 关闭连接
             conn.close()
+
     def delete_table2(self):
         """
         删除指定的表。
@@ -452,6 +454,7 @@ class SQLiteDatabase(DatabaseInterface):
         finally:
             # 关闭连接
             conn.close()
+
     def delete_token(self, paireaddress: str):
         """
         根据 paireaddress 删除 token_pairs 表中的记录，并删除 tokenpricehistory 表中的相关历史记录。
@@ -502,7 +505,7 @@ class SQLiteDatabase(DatabaseInterface):
         # 检查并创建其他必要的表
         table_name = f"price_history"
         create_table_query = f'''
-        
+
         CREATE TABLE IF NOT EXISTS {table_name} (
          id INTEGER PRIMARY KEY AUTOINCREMENT,
         tokenid INTEGER,
@@ -519,8 +522,9 @@ class SQLiteDatabase(DatabaseInterface):
         self.cursor.execute(create_table_query)
         self.conn.commit()
         print(f"Table {table_name} created or already exists.")
+
     def readdbtoken(self):
-    # 打开数据库连接
+        # 打开数据库连接
         cursor = self.conn.cursor()
 
         # 查询 token_pairs 表中的 id, chainid, pairaddress, 和 creattime 字段
@@ -580,7 +584,7 @@ class SQLiteDatabase(DatabaseInterface):
                 tokenid=row[0],  # 对应数据库中的 id 字段
 
                 chainid=row[1],
-                name = row[2],
+                name=row[2],
                 address=row[3],
                 pair_address=row[4],
                 creattime=row[5]
@@ -593,6 +597,7 @@ class SQLiteDatabase(DatabaseInterface):
             # 如果没有找到匹配的记录，返回 None
             cursor.close()
             return None
+
     def readprice(self, tokenid: float) -> list[TokenPriceHistory]:
         table_name = f"price_history"
 
@@ -623,6 +628,7 @@ class SQLiteDatabase(DatabaseInterface):
         ]
 
         return token_price_history_list
+
 
 
 
