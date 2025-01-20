@@ -38,7 +38,6 @@ setup(
         "pillow==10.4.0",
         "pluggy==1.5.0",
         "psutil==5.9.6",
-        "psycopg2==2.9.9",
         "pyaes==1.6.1",
         "pyasn1==0.6.0",
         "pydantic==1.10.17",
