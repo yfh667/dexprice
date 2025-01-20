@@ -4,7 +4,7 @@ import sys
 import os
 
 import dexprice.modules.utilis.findroot as findroot
-import dexprice.modules.db.insert_db_linshi as insert_db
+import dexprice.modules.db.insert_db as insert_db
 if __name__ == "__main__":
     # db_folder = '/home/yfh/Desktop/mywork/pgp2/bestdex/DexPrice/Data'  # 数据库存储文件夹
     # db_name = 'crypto_data.db'  # 数据库文件名
@@ -20,6 +20,6 @@ if __name__ == "__main__":
 
 
 
-    db = insert_db.SQLiteDatabase_linshi(db_folder2, db_name2)
+    db = insert_db.SQLiteDatabase(db_folder2, db_name2)
     db.delete_table2()
     db.connect()

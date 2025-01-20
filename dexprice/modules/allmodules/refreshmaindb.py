@@ -35,7 +35,7 @@ def refreshmaindb():
 
     db_name =   'all.db'  # 数据库文件名
 
-    db = insert_db.SQLiteDatabase_linshi(db_folder, db_name)
+    db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
     token_new = db.readdbtoken()
 

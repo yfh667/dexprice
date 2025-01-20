@@ -24,8 +24,8 @@ def send_message(token, chat_id, text):
 
     # 定义HTTP代理
     proxies = {
-        'http': 'http://127.0.0.1:8888',
-        'https': 'http://127.0.0.1:8888'
+        'http': 'http://127.0.0.1:7890',
+        'https': 'http://127.0.0.1:7890'
     }
 
     session = requests.Session()
