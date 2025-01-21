@@ -120,8 +120,8 @@ def initialtoken3(file,progress_callback=None):
 
         task_manager = dexscreen_parrel.TaskManager(batch, sourcetype, '', proxys, rate, capacity,max_threads_per_proxy,'initial')
         tokensinfo, failed_tasks = task_manager.run()
-        print(tokensinfo)
-        print("we have get the following tasks:")
+      #  print(tokensinfo)
+       # print("we have get the following tasks:")
 
         db.insert_multiple_tokeninfo(tokensinfo)
     #we have add all the token into the db,but we need refresh the db

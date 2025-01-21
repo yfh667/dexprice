@@ -146,14 +146,17 @@ def process_reordered_response(source_type: int,reordered_response: str, timesta
 
                    #here we need filiter the token,because if buy below 10 ,it is nonsense
                     txns = pair.get("txns", 0)
-                    buy2 = txns.get("h1", 0)
+                    buy2 = txns.get("h24", 0)
                     # 将 creation_time_raw 转换为可读格式
                     buy = buy2.get("buys", 0)
                     #fdv这么高但是buy少说吗有问题
                     if(buy<10 and fdv >1000000):
                         continue
 
-
+                    #卖盘没有，说明是貔貅
+                    sellall = buy2.get("sells", 0)
+                    if(sellall<10  and fdv >1000000 ):
+                        continue
                     creattime = datetime.utcfromtimestamp(creation_time_raw / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
                     token_info = TokenInfo(

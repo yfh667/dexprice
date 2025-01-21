@@ -11,7 +11,7 @@ import dexprice.modules.utilis.define as define
 import dexprice.modules.proxy.proxydefine as proxydefine
 
 #import dexprice.modules.db.insert_db as insert_db
-import dexprice.modules.db.insert_db_linshi as insert_db
+import dexprice.modules.db.insert_db as insert_db
 
 import dexprice.modules.proxy.clash_api as clash
 import dexprice.modules.proxy.testproxy as testproxy
@@ -26,92 +26,20 @@ def filter_ca_by_chain(result, chain_name):
     :return: 包含所有符合条件的 ca 值的列表。
     """
     return [entry['ca'] for entry in result if entry['chain'] == chain_name]
-#
-# def setproject(chainid,dbname:str,criteria: FilterCriteria,progress_callback=None):
-#     # criteria = FilterCriteria(
-#     #     liquidity_usd_min=1000,
-#     #     liquidity_usd_max=5000,
-#     #     fdv_min=1000000,
-#     #     fdv_max=10000000,
-#     #     pair_age_min_hours=5,
-#     #     pair_age_max_hours= None
-#     #    )
-#
-#     #  chainid = "solana"
-#     current_dir = os.path.dirname(os.path.abspath(__file__))
-#     PROJECT_ROOT = findroot.find_project_root(current_dir)
-#     DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
-#
-#     db_folder = DATA_FOLDER
-#
-#     db_name = chainid+'.db'  # 数据库文件名
-# #here
-#   #  db = insert_db.SQLiteDatabase(db_folder, db_name,chainid)
-#     db = insert_db.SQLiteDatabase_linshi(db_folder, db_name)
-#     db.connect()
-#     token_new = db.readdbtoken()
-#     db.close()
-#
-#     pair_addresses = []
-#
-#     for token in token_new:
-#         pair_addresses.append(token.pair_address)
-#
-#     rate =5
-#     capacity = 300
-#     sourcetype = define.Config.DEXS
-#     max_threads_per_proxy = 2
-#     clash_api_url = "http://127.0.0.1:9097"
-#     headers = {"Authorization": "Bearer 123"}
-#
-#     startport = 50000
-#
-#     proxys = proxymultitheread.get_one_ip_proxy_multithread(startport, clash_api_url, headers)
-#
-#     task_manager = dexscreen_parrel.TaskManager(pair_addresses, sourcetype, chainid, proxys, rate, capacity,max_threads_per_proxy)
-#     tokensinfo, failed_tasks = task_manager.run()
-#     tokenreal  = []
-#
-#     for token in tokensinfo:
-#         if(tokenflitter.normal_token_filter(token,  criteria)):
-#             if(token.creattime =='1970-01-01 00:00:00'):
-#                 pass
-#             else:
-#                 tokenreal.append(token)
-#
-#     DATA_FOLDER
-#     db_folder2 = DATA_FOLDER+'/Project'
-#   ##  db_folder2 = '/home/yfh/Desktop/MarketSystem/Data/Project'  # 数据库存储文件夹
-#     db_name2 = dbname+'.db'  # 数据库文件名
-#
-# #here
-#     #db = insert_db.SQLiteDatabase(db_folder2, db_name2,chainid)
-#     db = insert_db.SQLiteDatabase_linshi(db_folder2, db_name2)
-#     db.connect()
-#     # get the most liquid
-#
-#
-#
-#     #print(tokensinfo)
-#     db.insert_multiple_tokeninfo(tokenreal)
-#
-#
-#     db.close()
-#
 
 
 
 
 
 def setproject_linshi(dbname:str,criteria: FilterCriteria,progress_callback=None):
-    # criteria = FilterCriteria(
-    #     liquidity_usd_min=1000,
-    #     liquidity_usd_max=5000,
-    #     fdv_min=1000000,
-    #     fdv_max=10000000,
-    #     pair_age_min_hours=5,
-    #     pair_age_max_hours= None
-    #    )
+    criteria = FilterCriteria(
+        liquidity_usd_min=1000,
+        liquidity_usd_max=5000,
+        fdv_min=1000000,
+        fdv_max=10000000,
+        pair_age_min_hours=5,
+        pair_age_max_hours= None
+       )
 
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -123,7 +51,7 @@ def setproject_linshi(dbname:str,criteria: FilterCriteria,progress_callback=None
     db_name = 'all.db'  # 数据库文件名
 #here
   #  db = insert_db.SQLiteDatabase(db_folder, db_name,chainid)
-    db = insert_db.SQLiteDatabase_linshi(db_folder, db_name)
+    db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
     token_new = db.readdbtoken()
 
@@ -183,7 +111,7 @@ def setproject_linshi(dbname:str,criteria: FilterCriteria,progress_callback=None
     db_name2 = dbname+'.db'  # 数据库文件名
 
 
-    db = insert_db.SQLiteDatabase_linshi(db_folder2, db_name2)
+    db = insert_db.SQLiteDatabase(db_folder2, db_name2)
     db.connect()
 
     db.insert_multiple_tokeninfo(tokenreal)
