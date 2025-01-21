@@ -62,6 +62,20 @@ def sendmessage(address,port):
 
     token = "7190422738:AAEuhELn2QcVfEDa-cF4bAwe4KgyQmbNF_Q"
     send_message(token, "@jingou11", message_content,port)
+def sendmessage_chatid(chatid,address,port):
+    escaped_text = escape_markdown(address)
+
+    link = f"https://dexscreener.com/solana/{address}"
+    # 计算涨幅百分比
+
+    message_content = (
+        f"`{escaped_text}`\n"
+    )
+
+    token = "7190422738:AAEuhELn2QcVfEDa-cF4bAwe4KgyQmbNF_Q"
+   # send_message(token, "@jingou11", message_content,port)
+    send_message(token, chatid, message_content, port)
+
 def escape_markdown(text):
     """
     转义 MarkdownV2 中的特殊字符
