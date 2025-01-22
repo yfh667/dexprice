@@ -1,0 +1,67 @@
+
+from dexprice.modules.utilis.define import FilterCriteria
+import dexprice.modules.proxy.proxymultitheread as proxymultitheread
+import dexprice.modules.OHLCV.geck_parrel as geck_parrel
+import dexprice.modules.utilis.define as define
+import dexprice.modules.db.insert_db as insert_db
+import time
+import dexprice.modules.db.multidb as multidb
+import dexprice.modules.tg.tgbot as tgbot
+import dexprice.modules.strategy.basefunction as  basefunction
+import threading
+import dexprice.modules.allmodules.realtoken as realtoken
+import dexprice.modules.allmodules.refreshmaindb as dexrefreshmaindb
+import dexprice.modules.allmodules.geckpricehistory as geckpricehistory
+import dexprice.modules.pgpworker.read_from_newpair as read_from_newpair
+import dexprice.modules.pgpworker.write_maindb as write_maindb
+import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
+import dexprice.modules.pgpworker.gettheovhl as gettheovhl
+
+
+def strategy(db_folder,db_name,Proxyport,flag=1):
+ #   db_folder = '/home/yfh/Desktop/Data/Maindb'  # 数据库存储文件夹
+  #  db_name =   'main.db'  # 数据库文件名
+    db = insert_db.SQLiteDatabase(db_folder, db_name)
+    db.connect()
+    tokens = db.readdbtoken()
+    ## 读取token的历史数据，进行处理
+    db_path = db_folder + '/'  + 'main.db'
+    requestedtokenid = []
+    for token in tokens:
+        requestedtokenid.append(token.tokenid)
+
+    task_manager = multidb.DatabaseReadTaskManager(requestedtokenid, db_path, max_threads=5)
+    results = task_manager.run()
+    tokenhistorys = []
+    # 处理结果
+    for token_id, rows in results:
+        tokenhistory = []
+        for row in rows:
+            test = define.TokenPriceHistory(row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            tokenhistory.append(test)
+        tokenhistorys.append(tokenhistory)
+    find_address = []
+    for tokenhistory in tokenhistorys:
+        if (len(tokenhistory) > 1):
+            tokenhistory = basefunction.sort_by_time(tokenhistory)
+            if tokenhistory[-1].close > 0.8 * tokenhistory[0].open:
+                for i in range(1, len(tokenhistory)):
+                    token = tokenhistory[i]
+                    if (token.high > 5 * token.low):
+                        # 我么需要判断是涨还是跌
+                        if (token.close > token.open):
+                            tokenid = tokenhistory[0].tokenid
+                            tokendb = db.read_token_withid(tokenid)
+                            pairaddress = tokendb.pair_address
+                            if(flag):
+                                 tgbot.sendmessage(pairaddress, Proxyport)
+                            db.delete_token(pairaddress)
+                            find_address.append(pairaddress)
+                            break
+
+    # 输出前的去重操作。
+    unique_find_address = list(set(find_address))
+    for address in unique_find_address:
+        print(address)
+    db.close()
+

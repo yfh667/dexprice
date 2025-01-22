@@ -175,7 +175,11 @@ if __name__ == "__main__":
         fdv_min=100000,
         fdv_max=None,
         pair_age_min_hours=45,
-        pair_age_max_hours=None
+        pair_age_max_hours= None,
+        txn_buy=50,
+        txn_sell=50,
+        volume=1000
+
     )
     db_name = 'thistoday'
     import dexprice.modules.allmodules.project as project
