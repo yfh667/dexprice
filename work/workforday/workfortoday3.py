@@ -89,9 +89,6 @@ if __name__ == "__main__":
     dex_max_threads_per_proxy = 3
 
     sourcetype = define.Config.DEXS
-    # while (1):
-    # 1. we need get the token from the newpairdb,which is produced by pgp
-
     tokendata = db.readdbtoken()
 
     # 初始化字典，用链名作为键，地址列表作为值

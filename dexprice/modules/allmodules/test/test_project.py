@@ -10,4 +10,4 @@ if __name__ == "__main__":
         pair_age_min_hours=None,
         pair_age_max_hours= None
     )
-    project.setproject_linshi('test222',criteria)
+    project.setproject('test222',criteria)

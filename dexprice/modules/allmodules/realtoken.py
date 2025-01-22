@@ -45,10 +45,8 @@ def extract_valid_tokens(token_new,criteria):
     startport = 50000
     for chain, pairaddresses in chain_addresses.items():
         print(f"we check Chain: {chain} ")
-        if chain == "ethereum":
-            chainid='eth'
-        else:
-            chainid=chain
+        chainid = chain
+
         proxys = proxymultitheread.get_one_ip_proxy_multithread(startport, clash_api_url, headers)
         task_manager = dexscreen_parrel.TaskManager(pairaddresses, sourcetype, chainid, proxys, rate, capacity,
                                                     max_threads_per_proxy, 'get  ' + chainid)

@@ -2,7 +2,9 @@ import dexprice.modules.db.insert_db as insert_db
 import dexprice.modules.OHLCV.geck_parrel as geck_parrel
 import math
 import time
-
+# Define a function to try deleting the table with retry logic
+import dexprice.modules.proxy.proxymultitheread as proxymultitheread
+import dexprice.modules.allmodules.geckpricehistory as geckpricehistory
 def get_interval_seconds(timeframe, aggregate):
     aggregate = int(aggregate)  # 将 aggregate 转换为整数
 
@@ -83,3 +85,32 @@ def inserthistorywithgeck_db2(db, realpairaddress, chain_id, proxys, timeframe, 
         # 获取历史数据
         inserthistorywithgeck_db(db,realpairaddress,chain_id,proxys,timeframe,aggregate,before_timestamp,call_limit)
 
+
+def inserthistoryforaddress(db:insert_db.SQLiteDatabase,tokendata,timeframe,aggregate,before_timestamp,geck_limit):
+    # 初始化字典，用链名作为键，地址列表作为值
+    chain_addresses = {
+        'solana': [],
+        'base': [],
+        'ethereum': [],
+        'bsc': []
+    }
+
+    # 遍历 token_new，根据链名将地址加入对应的列表
+    for token in tokendata:
+        # 确保 token.chainid 是链名，并存在于字典的键中
+        if token.chainid in chain_addresses:
+            chain_addresses[token.chainid].append(token.pair_address)  # 添加地址到对应链的列表
+  #  current_timestamp = int(time.time())
+ #   before_timestamp = str(current_timestamp)  # 当前时间的时间戳
+    clash_api_url = "http://127.0.0.1:9097"
+    headers = {"Authorization": "Bearer 123"}
+    startport = 50000
+    for chain, pairaddresses in chain_addresses.items():
+        proxys = proxymultitheread.get_one_ip_proxy_multithread(startport, clash_api_url, headers)
+        if chain == "ethereum":
+            chainid = 'eth'
+        else:
+            chainid = chain
+        print(f"we check Chain: {chain} ")
+        inserthistorywithgeck_db(db, pairaddresses, chainid, proxys, timeframe,
+                                                  aggregate, before_timestamp, geck_limit)
