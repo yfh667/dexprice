@@ -50,10 +50,6 @@ def gethistorywithgeck(realpairaddress,chain_id,proxys,timeframe,aggregate,befor
     rate = 0.5
     capacity =30
     max_threads_per_proxy =1
-    # 确保参数是字符串类型
-    # timeframe = str(timeframe)
-    # aggregate = str(aggregate)
-    # before_timestamp = str(before_timestamp)
 
     task_manager = geck_parrel.GeckTaskManager(
         realpairaddress,

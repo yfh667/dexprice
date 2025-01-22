@@ -35,28 +35,24 @@ def extract_valid_tokens(token_new,criteria):
     # all the token that satisfied the request
     tokenreal = []
     # # 示例：打印每个链名及其对应的地址列表
+
+    sourcetype = define.Config.DEXS
+    max_threads_per_proxy = 2
+    clash_api_url = "http://127.0.0.1:9097"
+    headers = {"Authorization": "Bearer 123"}
+    rate = 5
+    capacity = 300
+    startport = 50000
     for chain, pairaddresses in chain_addresses.items():
-
         print(f"we check Chain: {chain} ")
-
-        rate = 5
-        capacity = 300
-
-        chainid = chain
-
-        sourcetype = define.Config.DEXS
-        max_threads_per_proxy = 2
-        clash_api_url = "http://127.0.0.1:9097"
-        headers = {"Authorization": "Bearer 123"}
-
-        startport = 50000
-
+        if chain == "ethereum":
+            chainid='eth'
+        else:
+            chainid=chain
         proxys = proxymultitheread.get_one_ip_proxy_multithread(startport, clash_api_url, headers)
-
         task_manager = dexscreen_parrel.TaskManager(pairaddresses, sourcetype, chainid, proxys, rate, capacity,
                                                     max_threads_per_proxy, 'get  ' + chainid)
         tokensinfo, failed_tasks = task_manager.run()
-
         for token in tokensinfo:
             if (tokenflitter.normal_token_filter(token, criteria)):
                 if (token.creattime == '1970-01-01 00:00:00'):

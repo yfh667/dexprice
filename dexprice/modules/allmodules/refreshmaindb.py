@@ -6,7 +6,7 @@ import dexprice.modules.utilis.define as define
 import dexprice.modules.db.insert_db as insert_db
 import os
 import dexprice.modules.utilis.findroot as findroot
-import dexprice.modules.allmodules.dexprice_multi as dexprice_multi
+import dexprice.modules.allmodules.realtoken as realtoken
 def refreshmaindb():
     # we need refresh the whole db
     criteria = FilterCriteria(
@@ -44,11 +44,9 @@ def refresh_database(db_name,db_folder,criteria):
     for token in token_new:
         # 确保 token.chainid 是链名，并存在于字典的键中
         if token.chainid in chain_addresses:
-            chain_addresses[token.chainid].append(token.pair_address)  # 添加地址到对应链的列表
             pair_addresses.append(token.pair_address)
 
-
-    tokenreal = dexprice_multi.dexprice_multi_fordb_token(chain_addresses, criteria)
+    tokenreal = realtoken.extract_valid_tokens(token_new,criteria)
 
     realpairaddress = []
     for token in tokenreal:
