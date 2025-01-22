@@ -57,6 +57,7 @@ def refreshmaindb():
         # 确保 token.chainid 是链名，并存在于字典的键中
         if token.chainid in chain_addresses:
             chain_addresses[token.chainid].append(token.pair_address)  # 添加地址到对应链的列表
+            pair_addresses.append(token.pair_address)
     tokenreal = []
     # # 示例：打印每个链名及其对应的地址列表
     for chain, pairaddresses in chain_addresses.items():
@@ -93,7 +94,7 @@ def refreshmaindb():
     for token in tokenreal:
         realpairaddress.append(token.pair_address)
    # print(realpairaddress)
-    missing_addresses = set(pairaddresses) - set(realpairaddress)
+    missing_addresses = set(pair_addresses) - set(realpairaddress)
     # 输出结果
     print("在 paireaddress 中存在但不在 realpairaddress 中的地址：")
     for address in missing_addresses:
