@@ -32,14 +32,14 @@ def filter_ca_by_chain(result, chain_name):
 
 
 def setproject_linshi(dbname:str,criteria: FilterCriteria,progress_callback=None):
-    criteria = FilterCriteria(
-        liquidity_usd_min=1000,
-        liquidity_usd_max=5000,
-        fdv_min=1000000,
-        fdv_max=10000000,
-        pair_age_min_hours=5,
-        pair_age_max_hours= None
-       )
+    # criteria = FilterCriteria(
+    #     liquidity_usd_min=1000,
+    #     liquidity_usd_max=None,
+    #     fdv_min=1000000,
+    #     fdv_max=None,
+    #     pair_age_min_hours=None,
+    #     pair_age_max_hours= None
+    #    )
 
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -49,8 +49,7 @@ def setproject_linshi(dbname:str,criteria: FilterCriteria,progress_callback=None
     db_folder = DATA_FOLDER
 
     db_name = 'all.db'  # 数据库文件名
-#here
-  #  db = insert_db.SQLiteDatabase(db_folder, db_name,chainid)
+
     db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
     token_new = db.readdbtoken()

@@ -36,7 +36,15 @@ def normal_token_filter(token_info: TokenInfo, criteria: FilterCriteria) -> bool
             return False
         if criteria.pair_age_max_hours is not None and pair_age_hours > criteria.pair_age_max_hours:
             return False
-    #检查购买里
+    #检查购买的次数
+    if criteria.txn_buy is not None and token_info.txn_buy < criteria.txn_buy:
+        return False
+    if criteria.txn_sell is not None and token_info.txn_sell < criteria.txn_sell:
+        return False
+    # 检查交易量
+    if criteria.volume is not None and token_info.volume < criteria.volume:
+        return False
+
     
     
     

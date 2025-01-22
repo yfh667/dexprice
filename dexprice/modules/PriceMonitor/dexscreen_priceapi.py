@@ -143,20 +143,27 @@ def process_reordered_response(source_type: int,reordered_response: str, timesta
                     liquidity_usd = float(pair.get("liquidity", {}).get("usd", 0))
                     fdv = float(pair.get("fdv", 0))
                     creation_time_raw = pair.get("pairCreatedAt", 0)
-
+# 我们把这里的对于buy的判断弄到criteria哪里去
                    #here we need filiter the token,because if buy below 10 ,it is nonsense
-                    txns = pair.get("txns", 0)
-                    buy2 = txns.get("h24", 0)
-                    # 将 creation_time_raw 转换为可读格式
-                    buy = buy2.get("buys", 0)
-                    #fdv这么高但是buy少说吗有问题
-                    if(buy<10 and fdv >1000000):
-                        continue
+                    # txns = pair.get("txns", 0)
+                    # buy2 = txns.get("h24", 0)
+                    # # 将 creation_time_raw 转换为可读格式
+                    # buy = buy2.get("buys", 0)
 
-                    #卖盘没有，说明是貔貅
-                    sellall = buy2.get("sells", 0)
-                    if(sellall<10  and fdv >1000000 ):
-                        continue
+                    txns_buy = pair.get("txns", 0).get("h1", 0).get("buys", 0)
+                    txns_sell = pair.get("txns", 0).get("h1", 0).get("sells", 0)
+                    volume = pair.get("volume", 0).get("h1", 0)
+
+                    #fdv这么高但是buy少说吗有问题
+                    # if(buy<10 and fdv >1000000):
+                    #     continue
+                    #
+                    # #卖盘没有，说明是貔貅
+                    # sellall = buy2.get("sells", 0)
+                    # if(sellall<10  and fdv >1000000 ):
+                    #     continue
+
+
                     creattime = datetime.utcfromtimestamp(creation_time_raw / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
                     token_info = TokenInfo(
@@ -168,7 +175,10 @@ def process_reordered_response(source_type: int,reordered_response: str, timesta
                         fdv=fdv,
                         timestamp=timestamp,
                         creattime=creattime,
-                        pair_address=pair_address
+                        pair_address=pair_address,
+                        txn_buy=txns_buy,
+                        txn_sell=txns_sell,
+                        volume=volume,
                     )
                     tokens_info.append(token_info)
             except json.JSONDecodeError as e:

@@ -2,7 +2,7 @@ import dexprice.modules.PriceMonitor.dexscreen_parrel as dexscreen_parrel
 import dexprice.modules.utilis.define as define
 
 #import dexprice.modules.db.insert_db as insert_db
-import dexprice.modules.db.insert_db_linshi as insert_db
+import dexprice.modules.db.insert_db as insert_db
 import dexprice.modules.OHLCV.geck_parrel as geck_parrel
 import dexprice.modules.PriceMonitor.tokenflitter as tokenflitter
 from dexprice.modules.utilis.define import FilterCriteria
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     db_folder = DATA_FOLDER + '/Project'  # 数据库存储文件夹
 
-    db = insert_db.SQLiteDatabase_linshi(db_folder, db_name + '.db')
+    db = insert_db.SQLiteDatabase(db_folder, db_name + '.db')
     db.connect()
 
     geck_rate = 0.4
@@ -182,12 +182,12 @@ if __name__ == "__main__":
 
     find_address = []
     for tokenhistory in tokenhistorys:
-        #debug
-        debug1 = tokenhistory[0].tokenid
-        tokendbdebug = db.read_token_withid(debug1)
-        debugpairaddress = tokendbdebug.pair_address
-        if(debugpairaddress=='6PcYbkvfMopvbtsFY8fQaTzoLQQ5s325b6st2Sf7YZbW'):
-            print("we debug")
+        # #debug
+        # debug1 = tokenhistory[0].tokenid
+        # tokendbdebug = db.read_token_withid(debug1)
+        # debugpairaddress = tokendbdebug.pair_address
+        # if(debugpairaddress=='6PcYbkvfMopvbtsFY8fQaTzoLQQ5s325b6st2Sf7YZbW'):
+        #     print("we debug")
         if (len(tokenhistory) > 1):
             if tokenhistory[-1].close > 0.8 * tokenhistory[0].open:
                 for i in range(1, len(tokenhistory)):

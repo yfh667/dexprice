@@ -7,7 +7,7 @@ import  dexprice.modules.utilis.define as define
 import dexprice.modules.PriceMonitor.dexscreen_priceapi as  dexscreen_priceapi
 def main():
     chain_id = "solana"  # 这里使用示例的链 ID
-    pair_addresses = ["hly9t5uafvmvsmh8jn9efs9f2vkee9gbk5kazvq2hyql"]  # 示例地址
+    pair_addresses = ["7cgxJtviuwiQr5sPH1CwjYpJd3hrXoMyfemj8HyQSEir"]  # 示例地址
    # CA_addresses=["4y9E3tJpGNzRr1592oWTPECgyp2VDSc1Bf3DqAm5FZsK","1"]
 
     CA_addresses = ["FtHCi9cxJSSizrzMzsPjAfTfJi32V1CGRDM5Skqn4QBF"]

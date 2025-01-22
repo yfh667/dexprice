@@ -6,7 +6,8 @@ from typing import Optional
 from datetime import datetime
 
 class TokenInfo:
-    def __init__(self, chainid:str,address: str,name: str, price_usd: float, liquidity_usd: float, fdv: float, timestamp: str,creattime: str ,pair_address: str, ):
+    def __init__(self, chainid:str,address: str,name: str, price_usd: float, liquidity_usd: float, fdv: float, timestamp: str,creattime: str ,pair_address: str, txn_buy: Optional[str] = None,
+                 txn_sell: Optional[str] = None, volume: Optional[float] = None):
         self.address = address
         self.name = name
         self.price_usd = price_usd
@@ -16,6 +17,9 @@ class TokenInfo:
         self.creattime = creattime
         self.pair_address = pair_address
         self.chainid = chainid
+        self.txn_buy = txn_buy
+        self.txn_sell = txn_sell
+        self.volume = volume
 
 
     def __repr__(self):
@@ -125,3 +129,8 @@ class FilterCriteria:
     fdv_max: Optional[float] = None
     pair_age_min_hours: Optional[float] = None
     pair_age_max_hours: Optional[float] = None
+    txn_buy: Optional[float] = None
+    txn_sell: Optional[float] = None
+    volume: Optional[float] = None
+
+
