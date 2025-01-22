@@ -86,3 +86,4 @@ def inserthistorywithgeck_db2(db, realpairaddress, chain_id, proxys, timeframe, 
         call_limit = call['limit']
         # 获取历史数据
         inserthistorywithgeck_db(db,realpairaddress,chain_id,proxys,timeframe,aggregate,before_timestamp,call_limit)
+
