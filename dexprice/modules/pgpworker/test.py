@@ -1,4 +1,3 @@
-
 import time
 import dexprice.modules.tg.tgbot as tgbot
 import threading
@@ -8,10 +7,7 @@ import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
 import dexprice.modules.pgpworker.gettheovhl as gettheovhl
 import dexprice.modules.pgpworker.strategy as strategy
 from dexprice.modules.utilis.define import FilterCriteria
-
 Proxyport =7890
-
-
 def refresh(db_folder,db_name,criteria):
     while True:
         print("\nrefresh 10-minute cycle...")

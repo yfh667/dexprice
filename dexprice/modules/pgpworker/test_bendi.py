@@ -5,6 +5,7 @@ import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
 import dexprice.modules.pgpworker.gettheovhl as gettheovhl
 import dexprice.modules.pgpworker.strategy as strategy
 from dexprice.modules.utilis.define import FilterCriteria
+import dexprice.modules.tg.tgbot as tgbot
 
 Proxyport =7890
 
@@ -12,7 +13,7 @@ def refresh(db_folder,db_name,criteria):
     #while True:
         print("\nrefresh 10-minute cycle...")
         refreshmaindb.refreshmaindb(db_folder,db_name,criteria)
-     #   tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
+        tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
        # time.sleep(300)  # 5min
 
 def ten_min_cycle(db_folder_newpair,db_name_newpair,db_folder_main,db_name_main,criteria):

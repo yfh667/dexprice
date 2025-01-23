@@ -91,34 +91,36 @@ def process_response(source_type, response_json):
         # For DEXCA, process to get the pair address with maximum liquidity
         if 'pairs' in response_json:
             pairs = response_json['pairs']
+            pairAddress = ''
+            chainid = ''
+
+            if pairs:
+                chainid = pairs[0]['chainId']
+                pairAddress = pairs[0]['pairAddress']
+
             # max_liquid = 0
             # minimumtime =''
-            # pairAddress = ''
-            # chainid = ''
-            chainid = pairs[0]['chainId']
-            pairAddress = pairs[0]['pairAddress']
-
             # if pairs:
             #     for pair in pairs:
-            #       #  liquidity_info = pair.get('liquidity', {})
-            #       #  liquid = liquidity_info.get('usd')
-            #         createtime = pair.get('pairCreatedAt')
+            #         liquidity_info = pair.get('liquidity', {})
+            #         liquid = liquidity_info.get('usd')
+            #     #    createtime = pair.get('pairCreatedAt')
             #         if (not len(chainid) ):
             #             if(pair['chainId']):
             #                 chainid = pair['chainId']
             #
-            #         # if liquid is not None:
-            #         #     if liquid > max_liquid:
-            #         #         max_liquid = liquid
-            #         #         pairAddress = pair['pairAddress']
-            #         if createtime is not None:
-            #             if minimumtime :
-            #                 if createtime < minimumtime:
-            #                     minimumtime = createtime
-            #                     pairAddress = pair['pairAddress']
-            #             else:
-            #                 minimumtime = createtime
+            #         if liquid is not None:
+            #             if liquid > max_liquid:
+            #                 max_liquid = liquid
             #                 pairAddress = pair['pairAddress']
+            #         # if createtime is not None:
+            #         #     if minimumtime :
+            #         #         if createtime < minimumtime:
+            #         #             minimumtime = createtime
+            #         #             pairAddress = pair['pairAddress']
+            #         #     else:
+            #         #         minimumtime = createtime
+            #         #         pairAddress = pair['pairAddress']
             #
             #         else:
             #             print("Warning: 'liquidity' or 'usd' key is missing in pair data.")
