@@ -52,7 +52,10 @@ if __name__ == "__main__":
         fdv_min=100000,
         fdv_max=None,
         pair_age_min_hours=1,
-        pair_age_max_hours=48
+        pair_age_max_hours=48,
+        txn_buy=10,
+        txn_sell=10,
+        volume=10000
     )
 
 

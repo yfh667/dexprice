@@ -7,22 +7,23 @@ import dexprice.modules.pgpworker.write_maindb as write_maindb
 import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
 import dexprice.modules.pgpworker.gettheovhl as gettheovhl
 import dexprice.modules.pgpworker.strategy as strategy
+from dexprice.modules.utilis.define import FilterCriteria
 
 Proxyport =7890
 
 
-def refresh(db_folder,db_name):
+def refresh(db_folder,db_name,criteria):
     while True:
         print("\nrefresh 10-minute cycle...")
-        refreshmaindb.refreshmaindb(db_folder,db_name)
+        refreshmaindb.refreshmaindb(db_folder,db_name,criteria)
         tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
         time.sleep(300)  # 5min
 
-def ten_min_cycle(db_folder_newpair,db_name_newpair,db_folder_main,db_name_main):
+def ten_min_cycle(db_folder_newpair,db_name_newpair,db_folder_main,db_name_main,criteria):
     while True:
         print("\nStarting 10-minute cycle...")
         tokennew = read_from_newpair.read_from_newpair(db_folder_newpair,db_name_newpair)
-        write_maindb.write_maindb(tokennew,db_folder_main,db_name_main)
+        write_maindb.write_maindb(tokennew,db_folder_main,db_name_main,criteria)
         time.sleep(600)  # 10分钟
 
 def thirty_min_cycle(db_folder_main,db_name_main):
@@ -34,7 +35,17 @@ def thirty_min_cycle(db_folder_main,db_name_main):
 
 if __name__ == "__main__":
     # 使用多线程分别运行 10 分钟和 30 分钟的任务
-
+    criteria = FilterCriteria(
+        liquidity_usd_min=10000,
+        liquidity_usd_max=None,
+        fdv_min=500000,
+        fdv_max=None,
+        pair_age_min_hours=None,
+        pair_age_max_hours= None,
+        txn_buy=100,
+        txn_sell=100,
+        volume=10000
+       )
 
     db_folder = '/home/yfh/Desktop/Data/NewPair'  # 数据库存储文件夹
     db_name = "newpair" + '.db'  # 数据库文件名
@@ -42,8 +53,8 @@ if __name__ == "__main__":
     db_folder_main = '/home/yfh/Desktop/Data/Maindb'  # 数据库存储文件夹
     db_name_main = "main" + '.db'  # 数据库文件名
 
-    ten_min_thread = threading.Thread(target=ten_min_cycle, args=(db_folder, db_name,db_folder_main, db_name_main))
-    refresh_thread = threading.Thread(target=refresh,args=(db_folder_main, db_name_main))
+    ten_min_thread = threading.Thread(target=ten_min_cycle, args=(db_folder, db_name,db_folder_main, db_name_main,criteria))
+    refresh_thread = threading.Thread(target=refresh,args=(db_folder_main, db_name_main, criteria))
     thirty_min_thread = threading.Thread(target=thirty_min_cycle,args=(db_folder_main, db_name_main))
 
     ten_min_thread.start()
