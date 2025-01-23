@@ -4,6 +4,8 @@ from typing import Tuple, List, Set
 
 import json
 import urllib3
+from numpy.ma.core import minimum
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
 from dexprice.modules.utilis.define import Config,TokenInfo
@@ -89,23 +91,37 @@ def process_response(source_type, response_json):
         # For DEXCA, process to get the pair address with maximum liquidity
         if 'pairs' in response_json:
             pairs = response_json['pairs']
-            max_liquid = 0
-            pairAddress = ''
-            chainid = ''
-            if pairs:
-                for pair in pairs:
-                    liquidity_info = pair.get('liquidity', {})
-                    liquid = liquidity_info.get('usd')
-                    if (not len(chainid) ):
-                        if(pair['chainId']):
-                            chainid = pair['chainId']
+            # max_liquid = 0
+            # minimumtime =''
+            # pairAddress = ''
+            # chainid = ''
+            chainid = pairs[0]['chainId']
+            pairAddress = pairs[0]['pairAddress']
 
-                    if liquid is not None:
-                        if liquid > max_liquid:
-                            max_liquid = liquid
-                            pairAddress = pair['pairAddress']
-                    else:
-                        print("Warning: 'liquidity' or 'usd' key is missing in pair data.")
+            # if pairs:
+            #     for pair in pairs:
+            #       #  liquidity_info = pair.get('liquidity', {})
+            #       #  liquid = liquidity_info.get('usd')
+            #         createtime = pair.get('pairCreatedAt')
+            #         if (not len(chainid) ):
+            #             if(pair['chainId']):
+            #                 chainid = pair['chainId']
+            #
+            #         # if liquid is not None:
+            #         #     if liquid > max_liquid:
+            #         #         max_liquid = liquid
+            #         #         pairAddress = pair['pairAddress']
+            #         if createtime is not None:
+            #             if minimumtime :
+            #                 if createtime < minimumtime:
+            #                     minimumtime = createtime
+            #                     pairAddress = pair['pairAddress']
+            #             else:
+            #                 minimumtime = createtime
+            #                 pairAddress = pair['pairAddress']
+            #
+            #         else:
+            #             print("Warning: 'liquidity' or 'usd' key is missing in pair data.")
 
             return chainid,pairAddress, gettime() if pairAddress else None
         else:
@@ -251,8 +267,6 @@ def Get_Token_Dexscreen(source_type: int,chain_id: str, pair_addresses: List[str
            # print(tokens_info)
             if tokens_info[0] == '':
                 return tokens_info
-
-
             pairAddress = []
             chain_id = tokens_info[0]
             pairAddress.append(tokens_info[1])

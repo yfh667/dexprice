@@ -29,13 +29,10 @@ def get_liquidmax_pair_addresses(pairs):
 
 if __name__ == '__main__':
 
-    ca_addresses = ["HPueqQjSgaSatMBKrvBvAnRmc6jnr51cPM1EjUJVpump"]
+    ca_addresses = ["GiG7Hr61RVm4CSUxJmgiCoySFQtdiwxtqf64MsRppump"]
 
-    proxy_port = 50048  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
+    proxy_port = 7890  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
 
- #   chain_id = "solana"  # 这里使用示例的链 ID
-    # print(CApairaddress)
-# 调用 Get_Price_Dexscreen 函数
     tokens_info = dexscreen_priceapi.Get_Token_Dexscreen(Config.DEXCA,'', ca_addresses, proxy_port)
     pairaddress = []
 
