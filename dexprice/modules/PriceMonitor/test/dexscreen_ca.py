@@ -29,7 +29,7 @@ def get_liquidmax_pair_addresses(pairs):
 
 if __name__ == '__main__':
 
-    ca_addresses = ["GiG7Hr61RVm4CSUxJmgiCoySFQtdiwxtqf64MsRppump"]
+    ca_addresses = ["6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump"]
 
     proxy_port = 7890  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
 

@@ -52,8 +52,7 @@ def extract_valid_tokens(token_new,criteria):
                                                     max_threads_per_proxy, 'get  ' + chainid)
         tokensinfo, failed_tasks = task_manager.run()
         for token in tokensinfo:
-            # if(token.pair_address=='D17YeDGu5o9oByhWvMnQbaoSruuaRPgEFZDMLtow6Jyo'):
-            #     print("here")
+
             if (tokenflitter.normal_token_filter(token, criteria)):
                 if (token.creattime == '1970-01-01 00:00:00'):
                     pass

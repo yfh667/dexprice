@@ -96,18 +96,46 @@ class SQLiteDatabase(DatabaseInterface):
         self.db_name = db_name
 
     def insert_data(self, table_name,chainid, name, ca, pairaddress, creattime):
-        insert_query = f'''
+    # 我们始终采用最新的类型的代币类型。
+    # 使用 INSERT OR REPLACE 实现替换操作
+        insert_or_replace_query = f'''
         INSERT INTO {table_name} (chainid, name, ca, pairaddress, creattime)
-        VALUES (?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(ca) DO UPDATE SET
+            chainid=excluded.chainid,
+            name=excluded.name,
+            pairaddress=excluded.pairaddress,
+            creattime=excluded.creattime;
         '''
         cursor = self.conn.cursor()
         try:
-            cursor.execute(insert_query, (chainid, name, ca, pairaddress, creattime))
+            cursor.execute(insert_or_replace_query, (chainid, name, ca, pairaddress, creattime))
             self.conn.commit()
-            print(f"Data inserted successfully for ca: {ca}")
-        except sqlite3.IntegrityError as e:
-            # 如果违反了 UNIQUE 约束，捕获并跳过该记录
-            print(f"Skipping insertion. The ca value '{ca}' already exists.")
+            print(f"Data inserted or updated successfully for ca: {ca}")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+
+            # 使用 INSERT OR REPLACE 实现替换操作
+
+    #     insert_or_replace_query = f'''
+    #     INSERT INTO {table_name} (chainid, name, ca, pairaddress, creattime)
+    #     VALUES (?, ?, ?, ?, ?)
+    #     ON CONFLICT(ca) DO UPDATE SET
+    #         chainid=excluded.chainid,
+    #         name=excluded.name,
+    #         pairaddress=excluded.pairaddress,
+    #         creattime=excluded.creattime;
+    #     '''
+    #     cursor = self.conn.cursor()
+    #     try:
+    #         cursor.execute(insert_or_replace_query, (chainid, name, ca, pairaddress, creattime))
+    #         self.conn.commit()
+    #         print(f"Data inserted successfully for ca: {ca}")
+    #     except sqlite3.IntegrityError as e:
+    #         # 如果违反了 UNIQUE 约束，捕获并跳过该记录
+    #         print(f"Skipping insertion. The ca value '{ca}' already exists.")
+
+
 
     def collect_ovhl_data(self, ovhl_data_list):
         token_price_history_list = []
