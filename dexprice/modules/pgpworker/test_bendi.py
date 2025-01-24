@@ -13,21 +13,21 @@ def refresh(db_folder,db_name,criteria):
     #while True:
         print("\nrefresh 10-minute cycle...")
         refreshmaindb.refreshmaindb(db_folder,db_name,criteria)
-        tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
+      #  tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
        # time.sleep(300)  # 5min
 
-def ten_min_cycle(db_folder_newpair,db_name_newpair,db_folder_main,db_name_main,criteria):
+def ten_min_cycle(db_folder_newpair,db_name_newpair,db_name_main,criteria,send_dbname):
    # while True:
       #  print("\nStarting 10-minute cycle...")
-        tokennew = read_from_newpair.read_from_newpair(db_folder_newpair,db_name_newpair)
-        write_maindb.write_maindb(tokennew,db_folder_main,db_name_main,criteria)
+        tokennew = read_from_newpair.read_from_newpair(db_folder_newpair,db_name_newpair,send_dbname)
+        write_maindb.write_maindb(tokennew,db_folder_newpair,db_name_main,criteria)
       #  time.sleep(600)  # 10分钟
 
-def thirty_min_cycle(db_folder_main,db_name_main):
+def thirty_min_cycle(db_folder_main,db_name_main,send_dbname):
  #   while True:
     #    print("\nStarting 30-minute cycle...")
         gettheovhl.gettheovhl(db_folder_main,db_name_main)
-        strategy.strategy(db_folder_main,db_name_main,  Proxyport)
+        strategy.strategy(db_folder_main,db_name_main, send_dbname, Proxyport,0)
      #   time.sleep(1800)  # 30分钟
 
 if __name__ == "__main__":
@@ -46,10 +46,9 @@ if __name__ == "__main__":
        )
     db_folder = '/Users/admin/Desktop/single-dex/Data/Project'  # 数据库存储文件夹
     db_name = "newpair" + '.db'  # 数据库文件名
-
-    db_folder_main = '/Users/admin/Desktop/single-dex/Data/Project'  # 数据库存储文件夹
     db_name_main = "main" + '.db'  # 数据库文件名
+    send_dbname = "send" + '.db'
 
-    ten_min_cycle(db_folder,db_name,db_folder_main,db_name_main,criteria)
+    ten_min_cycle(db_folder,db_name,db_name_main,criteria,send_dbname)
     refresh(db_folder,db_name,criteria)
-    thirty_min_cycle(db_folder_main,db_name_main)
+    thirty_min_cycle(db_folder,db_name_main,send_dbname)

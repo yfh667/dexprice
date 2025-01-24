@@ -16,9 +16,9 @@ import dexprice.modules.pgpworker.read_from_newpair as read_from_newpair
 import dexprice.modules.pgpworker.write_maindb as write_maindb
 import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
 import dexprice.modules.pgpworker.gettheovhl as gettheovhl
+import  dexprice.modules.pgpworker.senddb as senddb
 
-
-def strategy(db_folder,db_name,Proxyport,flag=1):
+def strategy(db_folder,db_name,send_dbname,Proxyport,sendflag=1):
  #   db_folder = '/home/yfh/Desktop/Data/Maindb'  # 数据库存储文件夹
   #  db_name =   'main.db'  # 数据库文件名
     db = insert_db.SQLiteDatabase(db_folder, db_name)
@@ -41,6 +41,7 @@ def strategy(db_folder,db_name,Proxyport,flag=1):
             tokenhistory.append(test)
         tokenhistorys.append(tokenhistory)
     find_address = []
+
     for tokenhistory in tokenhistorys:
         if (len(tokenhistory) > 1):
             tokenhistory = basefunction.sort_by_time(tokenhistory)
@@ -53,8 +54,15 @@ def strategy(db_folder,db_name,Proxyport,flag=1):
                             tokenid = tokenhistory[0].tokenid
                             tokendb = db.read_token_withid(tokenid)
                             pairaddress = tokendb.pair_address
-                            if(flag):
+                            # some times we need check it
+                          #  if(not senddb.havesend(db_folder,send_dbname,caaddress)):
+                            # here we need insert the token that haven't sent to the send db
+                            # in order to no duplicate in the send db
+                            senddb.insertsenddb(db_folder, send_dbname, tokendb)
+
+                            if (sendflag):
                                  tgbot.sendmessage(pairaddress, Proxyport)
+
                             db.delete_token(pairaddress)
                             find_address.append(pairaddress)
                             break

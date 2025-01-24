@@ -2,6 +2,7 @@
 import sqlite3
 import os
 from abc import ABC, abstractmethod
+from math import trunc
 
 from dexprice.modules.utilis.define import Config,TokenInfo,TokenPriceHistory,Tokendb
 import  dexprice.modules.utilis.define as define
@@ -51,6 +52,8 @@ class DatabaseInterface(ABC):
         chainid = token.chainid
         # 调用 insert_data 方法插入数据
         self.insert_data(table_name, chainid,name, ca, pairaddress, creattime)
+
+        ## it is for tokendb
     def insert_multiple_tokeninfo2(self, tokens: list[define.Tokendb]):
         """
         插入多个 TokenInfo 数据到数据库中
@@ -60,7 +63,7 @@ class DatabaseInterface(ABC):
         """
         table_name = "token_pairs"
         for token in tokens:
-            self.insert_data(table_name, token.name,token.address,token.pair_address,token.creattime)
+            self.insert_data(table_name, token.chainid,token.name,token.address,token.pair_address,token.creattime)
     def insert_multiple_tokeninfo(self, tokens: list[define.TokenInfo]):
         """
         插入多个 TokenInfo 数据到数据库中
@@ -114,27 +117,6 @@ class SQLiteDatabase(DatabaseInterface):
             print(f"Data inserted or updated successfully for ca: {ca}")
         except sqlite3.Error as e:
             print(f"An error occurred: {e}")
-
-            # 使用 INSERT OR REPLACE 实现替换操作
-
-    #     insert_or_replace_query = f'''
-    #     INSERT INTO {table_name} (chainid, name, ca, pairaddress, creattime)
-    #     VALUES (?, ?, ?, ?, ?)
-    #     ON CONFLICT(ca) DO UPDATE SET
-    #         chainid=excluded.chainid,
-    #         name=excluded.name,
-    #         pairaddress=excluded.pairaddress,
-    #         creattime=excluded.creattime;
-    #     '''
-    #     cursor = self.conn.cursor()
-    #     try:
-    #         cursor.execute(insert_or_replace_query, (chainid, name, ca, pairaddress, creattime))
-    #         self.conn.commit()
-    #         print(f"Data inserted successfully for ca: {ca}")
-    #     except sqlite3.IntegrityError as e:
-    #         # 如果违反了 UNIQUE 约束，捕获并跳过该记录
-    #         print(f"Skipping insertion. The ca value '{ca}' already exists.")
-
 
 
     def collect_ovhl_data(self, ovhl_data_list):
@@ -397,6 +379,28 @@ class SQLiteDatabase(DatabaseInterface):
         else:
             return None  # 如果找不到则返回 None
 
+    def check_ca_exists(self, caaddress):
+        """
+        查询数据库中是否存在与指定 caaddress 匹配的记录。
+        """
+        table_name = 'token_pairs'
+        query = f'''
+        SELECT * FROM {table_name}
+        WHERE ca = ?;
+        '''
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(query, (caaddress,))
+            result = cursor.fetchone()  # 获取匹配的一行数据
+            if result:
+                print(f"Token with ca '{caaddress}' exists: {result}")
+                return True  # 返回查询结果
+            else:
+                print(f"No token found with ca '{caaddress}'.")
+                return False
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+            return False
     def initialize_table(self):
         # 连接到SQLite数据库
         conn = sqlite3.connect(self.db_path)

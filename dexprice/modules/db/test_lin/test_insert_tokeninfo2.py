@@ -11,7 +11,7 @@ import dexprice.modules.utilis.findroot as findroot
 import dexprice.modules.db.insert_db as insert_db
 if __name__ == '__main__':
 
-    ca_addresses = ["6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump"]
+    ca_addresses = ["D9FaAohKSPR3WpDdLPnM4fLSH8d8JwJRrEZf6TDzpump"]
 
     proxy_port = 7890  # 示例代理端口    chain_id = "solana"  # 这里使用示例的链 ID
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
 
     db_folder = DATA_FOLDER +'/Project'# 数据库存储文件夹
-    db_name = 'test32.db'  # 数据库文件名
+    db_name = 'send.db'  # 数据库文件名
 
 
 
