@@ -15,18 +15,18 @@ def refresh(db_folder,db_name,criteria):
         tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
         time.sleep(300)  # 5min
 
-def ten_min_cycle(db_folder_newpair,db_name_newpair,db_name_main,criteria,senddbname):
+def ten_min_cycle(db_folder,db_name_newpair,db_name_main,criteria,senddbname):
     while True:
         print("\nStarting 10-minute cycle...")
-        tokennew = read_from_newpair.read_from_newpair(db_folder_newpair,db_name_newpair,senddbname)
-        write_maindb.write_maindb(tokennew,db_folder_main,db_name_main,criteria)
+        tokennew = read_from_newpair.read_from_newpair(db_folder,db_name_newpair,senddbname)
+        write_maindb.write_maindb(tokennew,db_folder,db_name_main,criteria)
         time.sleep(600)  # 10分钟
 
-def thirty_min_cycle(db_folder_main,db_name_main,senddbname):
+def thirty_min_cycle(db_folder,db_name_main,senddbname):
     while True:
         print("\nStarting 30-minute cycle...")
-        gettheovhl.gettheovhl(db_folder_main,db_name_main)
-        strategy.strategy(db_folder_main,db_name_main, senddbname, Proxyport)
+        gettheovhl.gettheovhl(db_folder,db_name_main)
+        strategy.strategy(db_folder,db_name_main, senddbname, Proxyport)
         time.sleep(1800)  # 30分钟
 
 if __name__ == "__main__":
