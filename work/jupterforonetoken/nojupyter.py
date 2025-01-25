@@ -5,7 +5,7 @@ import dexprice.modules.db.insert_db as insert_db
 import os
 import dexprice.modules.utilis.findroot as findroot
 import dexprice.modules.db.multidb as multidb
-
+import dexprice.modules.OHLCV.constructTokenPriceSummar as constructTokenPriceSummar
 ## use postql, we could neleget it
 if __name__ == "__main__":
 
@@ -39,3 +39,5 @@ if __name__ == "__main__":
         tokenhistorys.append(tokenhistory)
 
     rawdata = tokenhistorys[0]
+    t = constructTokenPriceSummar.mergeTokenHistoryByTimefr(rawdata,'15min')
+    print(t)

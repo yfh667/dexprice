@@ -1,12 +1,15 @@
 import dexprice.modules.utilis.define as define
 import dexprice.modules.stringtime.timestr as timestr
 # we got the big to small
-def constructTokenPriceSummar(tokenhistorys: list[define.TokenPriceHistory]):
+def constructTokenPriceSummar(tokenhistorys: list[define.TokenPriceHistory],klinetype):
     open = tokenhistorys[0].open
     close = tokenhistorys[-1].close
     high = tokenhistorys[0].high
     low = tokenhistorys[0].low
-    time = tokenhistorys[0].time
+
+    start = tokenhistorys[0].time
+    starttime = timestr.time_start(start, klinetype)
+
     for tokenhistory in tokenhistorys:
         if tokenhistory.high > high:
             high = tokenhistory.high
@@ -20,7 +23,7 @@ def constructTokenPriceSummar(tokenhistorys: list[define.TokenPriceHistory]):
         high=high,
         low=low,
         close=close,
-        time=time,  # Convert to a datetime object
+        time=starttime,  # Convert to a datetime object
         volume=0
     )
     return realtokenhistory
@@ -48,7 +51,7 @@ def mergeTokenHistoryByTimefr(tokenhistorys: list[define.TokenPriceHistory],klin
             tokenhistorys_tmp = []
             tokenhistorys_tmp.append(tokenhistorys[startidx])
 
-            newtokenhistory= constructTokenPriceSummar(tokenhistorys_tmp)
+            newtokenhistory= constructTokenPriceSummar(tokenhistorys_tmp,klinetype)
             newtokenhistorys.append(newtokenhistory)
 
             startidx = startidx + 1
@@ -56,7 +59,7 @@ def mergeTokenHistoryByTimefr(tokenhistorys: list[define.TokenPriceHistory],klin
 
         else:
             tokenhistorys_tmp = tokenhistorys[timestart:endidx+1]
-            newtokenhistory=constructTokenPriceSummar(tokenhistorys_tmp)
+            newtokenhistory=constructTokenPriceSummar(tokenhistorys_tmp,klinetype)
             newtokenhistorys.append(newtokenhistory)
 
             startidx = endidx+1
