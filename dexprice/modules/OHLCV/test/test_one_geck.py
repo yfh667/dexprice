@@ -1,19 +1,14 @@
-from typing import Optional, List, Tuple
-from datetime import datetime, timedelta, timezone
-import math
+
 import  dexprice.modules.OHLCV.geck as geck
-from typing import Optional, List, Tuple
-from datetime import datetime, timedelta, timezone
-import math
+
 import dexprice.modules.OHLCV.one_geck as one_geck
-import dexprice.modules.OHLCV.geck_parrel2 as geck_parrel2
-pool_address = ['6rvir3c4H9cvMxtz38aG9TJPgH1sDUiGpUnupiHituVs']
+pool_address = ['uZAxBqsQokCvnEdUo6hd21QRRYbp2jaXuGDYmHFZgAF']
 
 # 生成开始和结束时间的时间戳
-start_timestamp = one_geck.datetime_to_timestamp(2024, 9, 10, 0, 0, 0, is_utc=True)
-end_timestamp = one_geck.datetime_to_timestamp(2024, 9, 22, 0, 0, 0, is_utc=True)
+start_timestamp = one_geck.datetime_to_timestamp(2025, 1, 25, 7, 40, 0, is_utc=True)
+end_timestamp = one_geck.datetime_to_timestamp(2025, 1, 25, 9, 5, 0, is_utc=True)
 kline = 'minute'
-aggregate = '15'
+aggregate = '5'
 currency = "usd"
 token = 'base'
 proxy_port = 50005  # 指定代理端口
