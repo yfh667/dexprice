@@ -45,27 +45,34 @@ def strategy(db_folder,db_name,send_dbname,Proxyport,sendflag=1):
     for tokenhistory in tokenhistorys:
         if (len(tokenhistory) > 1):
             tokenhistory = basefunction.sort_by_time(tokenhistory)
+
             if tokenhistory[-1].close > 0.8 * tokenhistory[0].open:
+                ##here it is strategy
+                tokenid = tokenhistory[0].tokenid
+                tokendb = db.read_token_withid(tokenid)
+                pairaddress = tokendb.pair_address
+                strategyflag = 0
+
+# here is the strategy
                 for i in range(1, len(tokenhistory)):
                     token = tokenhistory[i]
                     if (token.high > 5 * token.low):
                         # 我么需要判断是涨还是跌
                         if (token.close > token.open):
-                            tokenid = tokenhistory[0].tokenid
-                            tokendb = db.read_token_withid(tokenid)
-                            pairaddress = tokendb.pair_address
-                            # some times we need check it
-                          #  if(not senddb.havesend(db_folder,send_dbname,caaddress)):
-                            # here we need insert the token that haven't sent to the send db
-                            # in order to no duplicate in the send db
-                            senddb.insertsenddb(db_folder, send_dbname, tokendb)
-
-                            if (sendflag):
-                                 tgbot.sendmessage(pairaddress, Proxyport)
-
-                            db.delete_token(pairaddress)
-                            find_address.append(pairaddress)
+# we find the token ,wo we need set the flag of the token
+                            strategyflag = 1
                             break
+
+                if(strategyflag == 1):
+                    if (sendflag):
+                        tgbot.sendmessage(pairaddress, Proxyport)
+
+                    #  if(not senddb.havesend(db_folder,send_dbname,caaddress)):
+                    # here we need insert the token that haven't sent to the send db
+                    # in order to no duplicate in the send db
+                    senddb.insertsenddb(db_folder, send_dbname, tokendb)
+                    db.delete_token(pairaddress)
+                    find_address.append(pairaddress)
 
     # 输出前的去重操作。
     unique_find_address = list(set(find_address))

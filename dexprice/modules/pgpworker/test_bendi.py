@@ -50,5 +50,5 @@ if __name__ == "__main__":
     send_dbname = "send" + '.db'
 
     ten_min_cycle(db_folder,db_name,db_name_main,criteria,send_dbname)
-    refresh(db_folder,db_name,criteria)
+   # refresh(db_folder,db_name,criteria)
     thirty_min_cycle(db_folder,db_name_main,send_dbname)

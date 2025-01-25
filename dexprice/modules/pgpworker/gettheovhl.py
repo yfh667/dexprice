@@ -1,29 +1,20 @@
 
 
-from dexprice.modules.utilis.define import FilterCriteria
 import dexprice.modules.proxy.proxymultitheread as proxymultitheread
-import dexprice.modules.OHLCV.geck_parrel as geck_parrel
-import dexprice.modules.utilis.define as define
+
 import dexprice.modules.db.insert_db as insert_db
 import time
-import dexprice.modules.db.multidb as multidb
-import dexprice.modules.tg.tgbot as tgbot
-import dexprice.modules.strategy.basefunction as  basefunction
-import threading
-import dexprice.modules.allmodules.realtoken as realtoken
-import dexprice.modules.allmodules.refreshmaindb as dexrefreshmaindb
+
 import dexprice.modules.allmodules.geckpricehistory as geckpricehistory
-import dexprice.modules.pgpworker.read_from_newpair as read_from_newpair
-import dexprice.modules.pgpworker.write_maindb as write_maindb
-import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
+
 
 
 def gettheovhl(db_folder, db_name):
 
     db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
-    timeframe = "hour"  # 可选值: day, hour, minute
-    aggregate = "1"  # 聚合时间段 5min k-line
+    timeframe = "minute"  # 可选值: day, hour, minute
+    aggregate = "5"  # 聚合时间段 5min k-line
     geck_limit = 30  # 我们检查5-10h之内的，因此limit提高到了10h。
     tokendata = db.readdbtoken()
 
