@@ -49,13 +49,13 @@ def tokendbtotokeninfo(tokendb):
         )
         tokens.append(tokeninfo)
     return tokens
-def readtoken():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    PROJECT_ROOT = findroot.find_project_root(current_dir)
-    DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
-
-    db_folder = DATA_FOLDER + '/cex'  # 数据库存储文件夹
-    db_name = "cexmain" + '.db'  # 数据库文件名
+def readtoken(db_folder,db_name):
+    # current_dir = os.path.dirname(os.path.abspath(__file__))
+    # PROJECT_ROOT = findroot.find_project_root(current_dir)
+    # DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
+    #
+    # db_folder = DATA_FOLDER + '/cex'  # 数据库存储文件夹
+    # db_name = "cexmain" + '.db'  # 数据库文件名
     db = cexdb.CexSQLiteDatabase(db_folder, db_name)
 
     db.connect()
@@ -69,7 +69,7 @@ def ten_min_cycle(db_folder,db_name):
         db = cexdb.CexSQLiteDatabase(db_folder, db_name)
 
         db.connect()
-        tokenlocal = tokendbtotokeninfo(readtoken())
+        tokenlocal = tokendbtotokeninfo(readtoken(db_folder,db_name))
         tokennew = getnew()
         added_tokens, deleted_tokens = find_added_and_deleted_tokens(tokenlocal, tokennew)
         # 1. we need find the added token
@@ -117,12 +117,7 @@ if __name__ == '__main__':
     db_folder = DATA_FOLDER + '/cex'  # 数据库存储文件夹
     db_name = "cexmain" + '.db'  # 数据库文件名
     
-   # db = cexdb.CexSQLiteDatabase(db_folder, db_name)
 
- #   db.connect()
-    # 创建一个 Tokendb 实例
- #   ten_min_thread = threading.Thread(target=ten_min_cycle,args=(db_folder,db_name))
-  #  ten_min_thread.start()
 
     ten_min_cycle(db_folder,db_name)
 

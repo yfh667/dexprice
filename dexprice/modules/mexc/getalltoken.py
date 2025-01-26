@@ -5,10 +5,17 @@ import requests
 # 发起 GET 请求
 
 def getalltoken():
+    #url = "https://contract.mexc.com/api/v1/contract/detail"
     url = "https://contract.mexc.com/api/v1/contract/detail"
     symbol = []
+    proxies = {
+        "http": "http://127.0.0.1:7890",
+        "https": "http://127.0.0.1:7890"
+    }
     try:
-        response = requests.get(url)
+        response = requests.get(url, proxies=proxies)  # 添加代理
+
+       # response = requests.get(url)
         # 检查 HTTP 响应状态码
         if response.status_code == 200:
             data = response.json()
