@@ -1,21 +1,12 @@
 
-from dexprice.modules.utilis.define import FilterCriteria
-import dexprice.modules.proxy.proxymultitheread as proxymultitheread
-import dexprice.modules.OHLCV.geck_parrel as geck_parrel
+
 import dexprice.modules.utilis.define as define
 import dexprice.modules.db.insert_db as insert_db
 import time
 import dexprice.modules.db.multidb as multidb
 import dexprice.modules.tg.tgbot as tgbot
 import dexprice.modules.strategy.basefunction as  basefunction
-import threading
-import dexprice.modules.allmodules.realtoken as realtoken
-import dexprice.modules.allmodules.refreshmaindb as dexrefreshmaindb
-import dexprice.modules.allmodules.geckpricehistory as geckpricehistory
-import dexprice.modules.pgpworker.read_from_newpair as read_from_newpair
-import dexprice.modules.pgpworker.write_maindb as write_maindb
-import dexprice.modules.pgpworker.refreshmaindb as refreshmaindb
-import dexprice.modules.pgpworker.gettheovhl as gettheovhl
+
 import  dexprice.modules.pgpworker.senddb as senddb
 
 def strategy(db_folder,db_name,send_dbname,Proxyport,sendflag=1):

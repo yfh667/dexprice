@@ -52,19 +52,7 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
             self.conn = None
             self.db_folder = db_folder
             self.db_name = db_name
-        # def insert_data(self, table_name, chain_id, name):
-        #     # 只插入需要的字段
-        #     insert_query = f"""
-        #     INSERT INTO {table_name} (chainid, name) VALUES (?, ?)
-        #     """
-        #     cursor = self.conn.cursor()
-        #     try:
-        #         cursor.execute(insert_query, (chain_id, name))
-        #         self.conn.commit()
-        #         print("Data inserted successfully")
-        #     except sqlite3.OperationalError as e:
-        #         print(f"SQLite Error: {e}")
-        #         raise
+
 
         def insert_data(self, table_name, chain_id, name):
             # 使用 INSERT OR IGNORE
@@ -428,39 +416,39 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
             finally:
                 # 关闭连接
                 conn.close()
-        # def delete_token(self, paireaddress: str):
-        #     """
-        #     根据 paireaddress 删除 token_pairs 表中的记录，并删除 tokenpricehistory 表中的相关历史记录。
-        #     """
-        #     # 确保数据库连接和游标已初始化
-        #     cursor = self.conn.cursor()
-        #
-        #     # Step 1: 查找 token_pairs 表中匹配的 tokenid
-        #     query = "SELECT id FROM token_pairs WHERE pairaddress = ?"
-        #     cursor.execute(query, (paireaddress,))
-        #     result = cursor.fetchone()
-        #
-        #     if result:
-        #         tokenid = result[0]
-        #
-        #         # Step 2: 删除 tokenpricehistory 表中的相关记录
-        #         table_name_price_history = f"{self.chainid}_price_history"
-        #         delete_history_query = f"DELETE FROM {table_name_price_history} WHERE tokenid = ?"
-        #         cursor.execute(delete_history_query, (tokenid,))
-        #         print(f"Deleted tokenpricehistory records for tokenid {tokenid}.")
-        #
-        #         # Step 3: 删除 token_pairs 表中的记录
-        #         delete_token_query = "DELETE FROM token_pairs WHERE id = ?"
-        #         cursor.execute(delete_token_query, (tokenid,))
-        #         print(f"Deleted token_pairs record for paireaddress {paireaddress} with tokenid {tokenid}.")
-        #
-        #         # 提交更改
-        #         self.conn.commit()
-        #     else:
-        #         print(f"No record found for paireaddress {paireaddress}.")
-        #
-        #     # 关闭游标
-        #     cursor.close()
+        def delete_token(self, name: str):
+            """
+            根据 paireaddress 删除 token_pairs 表中的记录，并删除 tokenpricehistory 表中的相关历史记录。
+            """
+            # 确保数据库连接和游标已初始化
+            cursor = self.conn.cursor()
+
+            # Step 1: 查找 token_pairs 表中匹配的 tokenid
+            query = "SELECT id FROM token_pairs WHERE name = ?"
+            cursor.execute(query, (name,))
+            result = cursor.fetchone()
+
+            if result:
+                tokenid = result[0]
+
+                # Step 2: 删除 tokenpricehistory 表中的相关记录
+                table_name_price_history = f"price_history"
+                delete_history_query = f"DELETE FROM {table_name_price_history} WHERE tokenid = ?"
+                cursor.execute(delete_history_query, (tokenid,))
+                print(f"Deleted tokenpricehistory records for tokenid {tokenid}.")
+
+                # Step 3: 删除 token_pairs 表中的记录
+                delete_token_query = "DELETE FROM token_pairs WHERE id = ?"
+                cursor.execute(delete_token_query, (tokenid,))
+                print(f"Deleted token_pairs record for name {name} with tokenid {tokenid}.")
+
+                # 提交更改
+                self.conn.commit()
+            else:
+                print(f"No record found for name {name}.")
+
+            # 关闭游标
+            cursor.close()
 
         def connect(self):
             # 创建指定的文件夹（如果不存在）

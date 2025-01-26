@@ -1,11 +1,8 @@
-import dexprice.modules.PriceMonitor.dexscreen_parrel as dexscreen_parrel
 import dexprice.modules.utilis.define as define
 import dexprice.modules.allmodules.geckpricehistory as geckpricehistory
 
-#import dexprice.modules.db.insert_db as insert_db
 import dexprice.modules.db.insert_db as insert_db
-import dexprice.modules.OHLCV.geck_parrel as geck_parrel
-import dexprice.modules.PriceMonitor.tokenflitter as tokenflitter
+
 from dexprice.modules.utilis.define import FilterCriteria
 
 import dexprice.modules.db.multidb as multidb
@@ -64,7 +61,7 @@ if __name__ == "__main__":
         fdv_min=100000,
         fdv_max=None,
         pair_age_min_hours=1,
-        pair_age_max_hours=48,
+        pair_age_max_hours=24,
         txn_buy=10,
         txn_sell=10,
         volume=10000
@@ -176,7 +173,7 @@ if __name__ == "__main__":
         liquidity_usd_max=None,
         fdv_min=100000,
         fdv_max=None,
-        pair_age_min_hours=45,
+        pair_age_min_hours=24,
         pair_age_max_hours= None,
         txn_buy=50,
         txn_sell=50,

@@ -34,6 +34,10 @@ class CexTokenInfo:
 
     def __repr__(self):
         return f"TokenInfo(chanid={self.chainid}, name={self.name}  )"
+    def __eq__(self, other):
+        if isinstance(other, CexTokenInfo):
+            return self.chainid == other.chainid and self.name.strip() == other.name.strip()
+        return False
 # modules/utilis/constants.py
 ## historical --
 class TokenPriceHistory:
