@@ -8,19 +8,19 @@ import dexprice.modules.pgpworker.gettheovhl as gettheovhl
 import dexprice.modules.pgpworker.strategy as strategy
 from dexprice.modules.utilis.define import FilterCriteria
 Proxyport =7890
-def refresh(db_folder,db_name,criteria):
+def refresh(db_folder,db_name,criteria,senddbname):
     while True:
         print("\nrefresh 10-minute cycle...")
-        refreshmaindb.refreshmaindb(db_folder,db_name,criteria)
+        refreshmaindb.refreshmaindb(db_folder,db_name,criteria,senddbname)
         tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
-        time.sleep(300)  # 5min
+        time.sleep(600)  # 5min
 
 def ten_min_cycle(db_folder,db_name_newpair,db_name_main,criteria,senddbname):
     while True:
         print("\nStarting 10-minute cycle...")
         tokennew = read_from_newpair.read_from_newpair(db_folder,db_name_newpair,senddbname)
         write_maindb.write_maindb(tokennew,db_folder,db_name_main,criteria)
-        time.sleep(600)  # 10分钟
+        time.sleep(300)  # 10分钟
 
 def thirty_min_cycle(db_folder,db_name_main,senddbname):
     while True:
@@ -50,15 +50,15 @@ if __name__ == "__main__":
     db_name_main = "main" + '.db'  # 数据库文件名
     senddbname = 'send'+'.db'
     ten_min_thread = threading.Thread(target=ten_min_cycle, args=(db_folder, db_name, db_name_main,criteria,senddbname))
-    refresh_thread = threading.Thread(target=refresh,args=(db_folder, db_name_main, criteria))
-    thirty_min_thread = threading.Thread(target=thirty_min_cycle,args=(db_folder, db_name_main,senddbname))
+    refresh_thread = threading.Thread(target=refresh,args=(db_folder, db_name_main, criteria,senddbname))
+    #thirty_min_thread = threading.Thread(target=thirty_min_cycle,args=(db_folder, db_name_main,senddbname))
 
     ten_min_thread.start()
-    thirty_min_thread.start()
+    #thirty_min_thread.start()
     refresh_thread.start()
 
 
     ten_min_thread.join()
-    thirty_min_thread.join()
+   # thirty_min_thread.join()
     refresh_thread.join()
 

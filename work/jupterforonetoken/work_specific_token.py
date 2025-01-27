@@ -21,7 +21,7 @@ if __name__ == "__main__":
     db = insert_db.SQLiteDatabase(db_folder, db_name)
     db.connect()
 
-    address = ['uZAxBqsQokCvnEdUo6hd21QRRYbp2jaXuGDYmHFZgAF']
+    address = ['8C6PLY2viiVwFb1QRBnWiQHbVhrn62Z5H2HecGrNwCt6']
     proxy_port = 50000
     chain_id = "solana"
     tokeninfo = dexscreen_priceapi.Get_Token_Dexscreen(define.Config.DEXS,chain_id,address, proxy_port)
@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
     pool_address = paireaddress
     # 生成开始和结束时间的时间戳
-    start_timestamp = one_geck.datetime_to_timestamp(2025, 1, 25, 7, 40, 0, is_utc=True)
-    end_timestamp = one_geck.datetime_to_timestamp(2025, 1, 25, 9, 5, 0, is_utc=True)
+    start_timestamp = one_geck.datetime_to_timestamp(2025, 1, 26, 5, 45, 0, is_utc=True)
+    end_timestamp = one_geck.datetime_to_timestamp(2025, 1, 26, 6, 55, 0, is_utc=True)
     kline = 'minute'
     aggregate = '5'
     currency = "usd"

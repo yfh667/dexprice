@@ -9,10 +9,10 @@ import dexprice.modules.tg.tgbot as tgbot
 
 Proxyport =7890
 
-def refresh(db_folder,db_name,criteria):
+def refresh(db_folder,db_name,criteria,send_dbname):
     #while True:
         print("\nrefresh 10-minute cycle...")
-        refreshmaindb.refreshmaindb(db_folder,db_name,criteria)
+        refreshmaindb.refreshmaindb(db_folder,db_name,criteria,send_dbname)
       #  tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
        # time.sleep(300)  # 5min
 
@@ -50,5 +50,5 @@ if __name__ == "__main__":
     send_dbname = "send" + '.db'
 
     ten_min_cycle(db_folder,db_name,db_name_main,criteria,send_dbname)
-   # refresh(db_folder,db_name,criteria)
-    thirty_min_cycle(db_folder,db_name_main,send_dbname)
+    refresh(db_folder,db_name_main,criteria,send_dbname)
+ #   thirty_min_cycle(db_folder,db_name_main,send_dbname)

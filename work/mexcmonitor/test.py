@@ -84,7 +84,7 @@ def ten_min_cycle(db_folder,db_name):
             )
             token_infos.append(token_info)
         db.insert_Multidata(token_infos)
-        mexctg.mexctg2( "@jingou24", token_infos)
+        #mexctg.mexctg2( "@jingou24", token_infos)
 
         deleted_tokens = list(set(deleted_tokens))
         token_infos = []
@@ -94,7 +94,7 @@ def ten_min_cycle(db_folder,db_name):
                 chainid='USDT',
             )
             token_infos.append(token_info)
-        mexctg.mexctg2( "@jingou25", token_infos)
+      #  mexctg.mexctg2( "@jingou25", token_infos)
 
         for token in deleted_tokens:
             delete_token_name = token

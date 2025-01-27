@@ -60,6 +60,7 @@ def refresh_database(db_name,db_folder,criteria):
         print(address)
 
     db.close()
+    return tokenreal
 
 
 
