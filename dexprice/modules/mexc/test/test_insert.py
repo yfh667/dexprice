@@ -25,24 +25,24 @@ if __name__ == '__main__':
     #     chainid="USD",  # Chain ID (string)
     #
     # )
-    symbol = getalltoken.getalltoken()
+   # symbol = getalltoken.getalltoken()
     tokens = []
-    for symbol in symbol:
-        token_parts = symbol.split('_')
-        name = token_parts[0]
-        chaind = token_parts[1]
+    # for symbol in symbol:
+    #     token_parts = symbol.split('_')
+    #     name = token_parts[0]
+    #     chaind = token_parts[1]
       #  time = initial_timesta.determine_initial_timesta(name+'_USDT')
-        time =None
-        if(time):
-            creattime= time
-        else:
-            creattime=None
-        token = define.CexTokenInfo(
-            name=name,  # Token name (string)
-            chainid=chaind,  # Chain ID (string)
-            creattime=creattime
-        )
-        tokens.append(token)
+    time =None
+    if(time):
+        creattime= time
+    else:
+        creattime=None
+    token = define.CexTokenInfo(
+        name='name',  # Token name (string)
+        chainid="chaind",  # Chain ID (string)
+        creattime='creattime'
+    )
+    tokens.append(token)
     db.insert_Multidata(tokens)
     # 打印实例属性
 

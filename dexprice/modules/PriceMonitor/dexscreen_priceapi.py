@@ -156,7 +156,10 @@ def process_reordered_response(source_type: int,reordered_response: str, timesta
                     chainid = pair.get("chainId", "")
                     base_token = pair.get("baseToken", {})
                     address = base_token.get("address", "")
-                    name = base_token.get("name", "")
+                    # here we modify
+                 #   name = base_token.get("name", "")
+                    name = base_token.get("symbol", "")
+
                     price_usd = float(pair.get("priceUsd", 0))
                     liquidity_usd = float(pair.get("liquidity", {}).get("usd", 0))
                     fdv = float(pair.get("fdv", 0))

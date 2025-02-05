@@ -64,3 +64,19 @@ def refresh_database(db_name,db_folder,criteria):
 
 
 
+def refreshmaindb_cex(criteria:FilterCriteria):
+    # we need refresh the whole db
+    # criteria = FilterCriteria(
+    #     liquidity_usd_min=1000,
+    #     liquidity_usd_max=None,
+    #     fdv_min=1000,
+    #     fdv_max=None,
+    #     pair_age_min_hours=None,
+    #     pair_age_max_hours= None
+    # )
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = findroot.find_project_root(current_dir)
+    DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
+    db_folder = DATA_FOLDER+'/cex'
+    db_name =   'rawmeme.db'  # 数据库文件名
+    refresh_database(db_name, db_folder, criteria)

@@ -54,15 +54,15 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
             self.db_name = db_name
 
 
-        def insert_data(self, table_name, chain_id, name):
+        def insert_data(self, table_name, chain_id, name,creattime):
             # 使用 INSERT OR IGNORE
             insert_query = f"""
-            INSERT OR IGNORE INTO {table_name} (chainid, name)
-            VALUES (?, ?)
+            INSERT OR IGNORE INTO {table_name} (chainid, name, creattime)
+            VALUES (?, ?,?)
             """
             cursor = self.conn.cursor()
             try:
-                cursor.execute(insert_query, (chain_id, name))
+                cursor.execute(insert_query, (chain_id, name, creattime))
                 self.conn.commit()
                 print(f"Inserted: {name}")
             except sqlite3.IntegrityError as e:
@@ -71,7 +71,7 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
             table_name = 'token_pairs'
             if len(tokendb) != 0:
                 for token in tokendb:
-                    self.insert_data( table_name, token.chainid ,token.name   )
+                    self.insert_data( table_name, token.chainid ,token.name,token.creattime   )
 
         def collect_ovhl_data(self, ovhl_data_list:list[define.OvhlFromCex]):
             token_price_history_list = []

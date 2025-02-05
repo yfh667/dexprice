@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from datetime import datetime, timezone
-
+import time
 def get_current_utc_date():
     """
     获取当前UTC日期并返回格式为 '2024-09-13' 的字符串
@@ -68,11 +68,28 @@ def timestamp_to_datetime(timestamp, to_utc=True):
     else:
         return datetime.fromtimestamp(timestamp)
 
+
 # import time
 #
 # current_timestamp = int(time.time())
 # print(current_timestamp)
 
+
+def datetime_to_timestamp(dt, is_utc=True):
+    """
+    将 datetime 对象转换为时间戳。
+
+    参数:
+    - dt: datetime 对象
+    - is_utc: 是否为 UTC 时间
+
+    返回:
+    - 时间戳（秒）
+    """
+    if is_utc:
+        return int(dt.replace(tzinfo=timezone.utc).timestamp())
+    else:
+        return int(dt.timestamp())
 
 
 def compare(creattime, now):
@@ -158,7 +175,7 @@ def timestamp_to_datetime(timestamp, to_utc=True):
 
 import time
 
-def datetime_to_timestamp(date_time_str):
+def datetime_to_timestamp_str(date_time_str):
     """
     Convert a datetime string to a timestamp.
 
@@ -178,14 +195,17 @@ def datetime_to_timestamp(date_time_str):
         print(f"Error: {e}")
         return None
 
-# Example usage
-# date_time_str = "2024-11-21 22:30:00"
+# # Example usage
+# date_time_str = "2024-1-31 00:00:00"
 # timestamp = datetime_to_timestamp(date_time_str)
 # print(f"The timestamp for  '{date_time_str}' is: {timestamp}")
 
 #获得当前时间的标准k线起始时间，
 #例如，2024-09-02:36:00 的标准k线起始时间是 2024-09-02:00:00
 #2024-12-24 19:58:16
+
+
+
 from datetime import datetime
 
 def get_the_utc_1h(date_time_str):
@@ -209,3 +229,66 @@ def get_the_utc_1h(date_time_str):
 # example_time = "2024-12-24 18:58:16"
 # result = get_the_utc_1h(example_time)
 # print(result)  # 输出: "2024-12-24 19:00:00"
+
+
+# 我们获得后面一个月的第一天。
+#如果当前是12月，那么就是第二年的一月第一天
+def addtime(starttime):
+    formatted_date = timestamp_to_datetime(starttime)
+  #  formatted_date = starttime.strftime('%Y-%m-%d')
+    dt = datetime.strptime(formatted_date, "%Y-%m-%d %H:%M:%S")
+    month = dt.month
+    year = dt.year
+    if month == 12:
+        endtime = dt.replace(year=year+1,day=1,month=1, minute=0, second=0, microsecond=0)
+    else:
+
+        endtime = dt.replace(month=month+1,day=1,minute=0, second=0, microsecond=0)
+    end_string = endtime.strftime("%Y-%m-%d %H:%M:%S")
+   # end_utc = datetime.strptime(end_string, "%Y-%m-%d %H:%M:%S")
+    end_utc =  datetime_to_timestamp_str(end_string)
+    return end_utc
+
+def mexc_addtime(starttime):
+    formatted_date = timestamp_to_datetime(starttime)
+  #  formatted_date = starttime.strftime('%Y-%m-%d')
+    dt = datetime.strptime(formatted_date, "%Y-%m-%d %H:%M:%S")
+   # month = dt.month
+    year = dt.year
+
+    # start = dt.replace(year=year,day=1,month=1, minute=0, second=0, microsecond=0)
+    # end = dt.replace(year=year+1,day=1,month=1, minute=0, second=0, microsecond=0)
+    # from datetime import datetime
+
+    # year = 2024
+    # dt = datetime.now()
+
+    # 设定 start 为当年1月1日 00:00:00
+    start = dt.replace(year=year, month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # 设定 end 为下一年1月1日 00:00:00
+    end = dt.replace(year=year + 2, month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # print("Start:", start)
+    # print("End:", end)
+
+   #  # if month == 12:
+   #  #     endtime = dt.replace(year=year+1,day=10,month=1, minute=0, second=0, microsecond=0)
+   #  # else:
+   #  #
+   #  #     endtime = dt.replace(month=month+1,day=10,minute=0, second=0, microsecond=0)
+   #  # end_string = endtime.strftime("%Y-%m-%d %H:%M:%S")
+   # # end_utc = datetime.strptime(end_string, "%Y-%m-%d %H:%M:%S")
+   #  end_utc =  datetime_to_timestamp(end_string)
+   # start_string = start.strftime("%Y-%m-%d %H:%M:%S")
+    #start_dt = datetime.strptime(start_string, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+
+    start_utc = datetime_to_timestamp(start)
+    end_utc = datetime_to_timestamp(end)
+    # end_string = end.strftime("%Y-%m-%d %H:%M:%S")
+    # end_utc = datetime_to_timestamp(end_string,is_utc=True)
+
+    return 1000*start_utc ,1000*end_utc
+# starttime = 1733299200
+# end =addtime(starttime)
+# print(end)

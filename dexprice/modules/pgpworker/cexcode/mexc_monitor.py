@@ -106,7 +106,7 @@ def ten_min_cycle(db_folder,db_name):
 
         db.close()
 
-        time.sleep(600)  # 10分钟
+        time.sleep(3600)  # 10分钟
 if __name__ == '__main__':
 
 

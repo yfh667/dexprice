@@ -28,15 +28,16 @@ class TokenInfo:
 
 
 class CexTokenInfo:
-    def __init__(self,  name:  str ,chainid: str, ):
+    def __init__(self,  name:  str ,chainid: str,creattime :str ):
         self.chainid = chainid
         self.name = name
+        self.creattime = creattime
 
     def __repr__(self):
-        return f"TokenInfo(chanid={self.chainid}, name={self.name}  )"
+        return f"CexTokenInfo(chanid={self.chainid}, name={self.name} ,creattime={self.creattime}) )"
     def __eq__(self, other):
         if isinstance(other, CexTokenInfo):
-            return self.chainid == other.chainid and self.name.strip() == other.name.strip()
+            return self.chainid == other.chainid and self.name.strip() == other.name.strip() and self.creattime.strip() == other.creattime.strip()
         return False
 # modules/utilis/constants.py
 ## historical --

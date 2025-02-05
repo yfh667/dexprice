@@ -7,11 +7,11 @@ import  dexprice.modules.utilis.define as define
 import dexprice.modules.PriceMonitor.dexscreen_priceapi as  dexscreen_priceapi
 def main():
     chain_id = "solana"  # 这里使用示例的链 ID
-    pair_addresses = ["7cgxJtviuwiQr5sPH1CwjYpJd3hrXoMyfemj8HyQSEir"]  # 示例地址
+    pair_addresses = ["3bC2e2RxcfvF9oP22LvbaNsVwoS2T98q6ErCRoayQYdq"]  # 示例地址
    # CA_addresses=["4y9E3tJpGNzRr1592oWTPECgyp2VDSc1Bf3DqAm5FZsK","1"]
 
     CA_addresses = ["FtHCi9cxJSSizrzMzsPjAfTfJi32V1CGRDM5Skqn4QBF"]
-    proxy_port = 50000  # 示例代理端口
+    proxy_port = 7890  # 示例代理端口
 
     # 调用 Get_Price_Dexscreen 函数
     tokens_info = dexscreen_priceapi.Get_Token_Dexscreen(define.Config.DEXS,chain_id, pair_addresses, proxy_port)
