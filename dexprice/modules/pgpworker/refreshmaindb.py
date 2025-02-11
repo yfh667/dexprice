@@ -40,8 +40,8 @@ def refreshmaindb(db_folder,db_name,criteria: FilterCriteria,send_dbname):
         fdv_max=50000000,
         pair_age_min_hours=None,
         pair_age_max_hours= None,
-        txn_buy=10000,
-        txn_sell=10000,
+        txn_buy=1000,
+        txn_sell=1000,
         volume=100000
        )
     for token in tokennew:
