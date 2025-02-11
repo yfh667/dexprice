@@ -37,12 +37,12 @@ def refreshmaindb(db_folder,db_name,criteria: FilterCriteria,send_dbname):
         liquidity_usd_min=10000,
         liquidity_usd_max=None,
         fdv_min=5000000,
-        fdv_max=None,
-        pair_age_min_hours=1,
-        pair_age_max_hours= 24,
-        txn_buy=100,
-        txn_sell=100,
-        volume=10000
+        fdv_max=50000000,
+        pair_age_min_hours=None,
+        pair_age_max_hours= None,
+        txn_buy=10000,
+        txn_sell=10000,
+        volume=100000
        )
     for token in tokennew:
         if (tokenflitter.normal_token_filter(token, criteria2)):

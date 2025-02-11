@@ -13,7 +13,7 @@ def refresh(db_folder,db_name,criteria,send_dbname):
     #while True:
         print("\nrefresh 10-minute cycle...")
         refreshmaindb.refreshmaindb(db_folder,db_name,criteria,send_dbname)
-      #  tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
+        tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
        # time.sleep(300)  # 5min
 
 def ten_min_cycle(db_folder_newpair,db_name_newpair,db_name_main,criteria,send_dbname):
@@ -39,11 +39,12 @@ if __name__ == "__main__":
         fdv_min=500000,
         fdv_max=None,
         pair_age_min_hours=None,
-        pair_age_max_hours= None,
-        txn_buy=100,
-        txn_sell=100,
-        volume=10000
-       )
+        pair_age_max_hours=None,
+        txn_buy=10,
+        txn_sell=10,
+        volume=1000
+    )
+
     db_folder = '/Users/admin/Desktop/single-dex/Data/Project'  # 数据库存储文件夹
     db_name = "newpair" + '.db'  # 数据库文件名
     db_name_main = "main" + '.db'  # 数据库文件名

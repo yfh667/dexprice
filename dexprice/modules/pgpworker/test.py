@@ -13,14 +13,14 @@ def refresh(db_folder,db_name,criteria,senddbname):
         print("\nrefresh 10-minute cycle...")
         refreshmaindb.refreshmaindb(db_folder,db_name,criteria,senddbname)
         tgbot.sendmessage_chatid("@jingou22", "refresh token", Proxyport)
-        time.sleep(600)  # 5min
+        time.sleep(600)  # 10min
 
 def ten_min_cycle(db_folder,db_name_newpair,db_name_main,criteria,senddbname):
     while True:
         print("\nStarting 10-minute cycle...")
         tokennew = read_from_newpair.read_from_newpair(db_folder,db_name_newpair,senddbname)
         write_maindb.write_maindb(tokennew,db_folder,db_name_main,criteria)
-        time.sleep(300)  # 10分钟
+        time.sleep(300)  # 5分钟
 
 def thirty_min_cycle(db_folder,db_name_main,senddbname):
     while True:
@@ -28,6 +28,7 @@ def thirty_min_cycle(db_folder,db_name_main,senddbname):
         gettheovhl.gettheovhl(db_folder,db_name_main)
         strategy.strategy(db_folder,db_name_main, senddbname, Proxyport)
         time.sleep(1800)  # 30分钟
+
 
 if __name__ == "__main__":
     # 使用多线程分别运行 10 分钟和 30 分钟的任务
@@ -38,10 +39,12 @@ if __name__ == "__main__":
         fdv_max=None,
         pair_age_min_hours=None,
         pair_age_max_hours= None,
-        txn_buy=100,
-        txn_sell=100,
-        volume=10000
+        txn_buy=10,
+        txn_sell=10,
+        volume=1000
        )
+
+
 
     db_folder = '/home/yfh/Desktop/Data/NewPair'  # 数据库存储文件夹
     db_name = "newpair" + '.db'  # 数据库文件名
