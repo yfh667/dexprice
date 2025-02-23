@@ -21,7 +21,7 @@ if __name__ == '__main__':
     DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
 
     db_folder = DATA_FOLDER + '/cex'  # 数据库存储文件夹
-    db_name_raw = "spot_main" + '.db'  # 数据库文件名
+    db_name_raw = "mexc_spot" + '.db'  # 数据库文件名
     flag = 0
     db_mubiao_name = "myspot" + '.db'
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     tokens = db.readdbtoken()
 
-    creattime_want = one_geck.datetime_to_timestamp(2024, 2, 20, 0, 0, 0, is_utc=True)
+    creattime_want = one_geck.datetime_to_timestamp(2025, 1, 1, 0, 0, 0, is_utc=True)
 
     usetoken = []
     for token in tokens:
