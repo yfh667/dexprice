@@ -74,7 +74,7 @@ class OvhlFromDex:
 ## raw tiem sequence data
 
 class OvhlFromCex:
-    def __init__(self,   name : str, open: float, high: float, low: float, close: str,time: str ,volume: float):
+    def __init__(self,   name : str, open: float, high: float, low: float, close: str,time: str ,volume: float,amount:float):
         self.name = name
 
         self.open = open
@@ -83,9 +83,10 @@ class OvhlFromCex:
         self.close = close
         self.time = time
         self.volume = volume
+        self.amount = amount
 
     def __repr__(self):
-        return f"OvhlFromCex(name={self.name},  open={self.open}, high={self.high}, low={self.low}, close={self.close}, time={self.time}, volume={self.volume})"
+        return f"OvhlFromCex(name={self.name},  open={self.open}, high={self.high}, low={self.low}, close={self.close}, time={self.time}, volume={self.volume},amount={self.amount})"
 # modules/utilis/constants.py
 
 class OvhlRawPrice:

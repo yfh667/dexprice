@@ -8,10 +8,12 @@ if __name__ == '__main__':
     tokeninfo1 = define.CexTokenInfo(
         name = "BTC",
         chainid='USDT',
+        creattime='11',
         )
     tokeninfo2 = define.CexTokenInfo(
         name="ETH",
         chainid='USDT',
+        creattime='11',
     )
     tokeninfos = [tokeninfo1, tokeninfo2]
     mexctg.mexctg2(chatid, tokeninfos)
