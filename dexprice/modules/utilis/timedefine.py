@@ -1,6 +1,17 @@
 from datetime import datetime, timedelta
 from datetime import datetime, timezone
 import time
+
+
+def get_current_utc_timestemp():
+    """
+    获取当前UTC日期并返回格式为 '2024-09-13' 的字符串
+    """
+
+    current_utc_time =int(time.time())
+    return current_utc_time
+
+# print(get_current_utc())
 def get_current_utc_date():
     """
     获取当前UTC日期并返回格式为 '2024-09-13' 的字符串

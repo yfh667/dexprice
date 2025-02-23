@@ -56,6 +56,24 @@ class TokenPriceHistory:
         return f"TokenPriceHistory(tokenid={self.tokenid},  open={self.open}, high={self.high}, low={self.low}, close={self.close}, time={self.time}, volume={self.volume})"
 # modules/utilis/constants.py
 
+## historical --
+class CexTokenPriceHistory:
+    def __init__(self, tokenid: float, open: float, high: float, low: float, close: str,time: str ,volume: float,amount:float):
+        self.tokenid = tokenid
+
+        self.open = open
+        self.high = high
+        self.low = low
+        self.close = close
+        self.time = time
+        self.volume = volume
+        self.amount = amount
+
+
+    def __repr__(self):
+        return f"TokenPriceHistory(tokenid={self.tokenid},  open={self.open}, high={self.high}, low={self.low}, close={self.close}, time={self.time}, volume={self.volume},volume={self.amount})"
+# modules/utilis/constants.py
+
 class OvhlFromDex:
     def __init__(self,  pairaddress: str, open: float, high: float, low: float, close: str,time: str ,volume: float):
         self.pairaddress = pairaddress

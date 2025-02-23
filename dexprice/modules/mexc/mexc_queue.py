@@ -4,7 +4,7 @@ import math
 import dexprice.modules.OHLCV.one_geck as one_geck
 
 class mexcqueue:
-    def __init__(self, symbol, kline, aggregate, starttime,endtime,  ):
+    def __init__(self, symbol, kline:str, aggregate:str, starttime:int,endtime:int,  ):
         """
         初始化请求参数类的实例。
 
@@ -24,8 +24,7 @@ class mexcqueue:
         """
         定义对象的字符串表示。
         """
-        return (f"addressesqueue(symbol={self.symbol}, kline={self.kline}, "
-                f"aggregate={self.aggregate}, starttime={self.starttime}, endtime={self.endtime},   ")
+        return f"addressesqueue(symbol={self.symbol}, kline={self.kline}, aggregate={self.aggregate}, starttime={self.starttime}, endtime={self.endtime})"
 
     def to_tuple(self):
         """
@@ -40,7 +39,7 @@ from datetime import datetime, timedelta
 
 
 def ceil_timestamp(timestamp: datetime, kline: str, aggregate: int) -> datetime:
-    if kline == 'Min':
+    if kline == 'M':
         total_minutes = timestamp.hour * 60 + timestamp.minute
         remainder = total_minutes % aggregate
 
@@ -53,7 +52,7 @@ def ceil_timestamp(timestamp: datetime, kline: str, aggregate: int) -> datetime:
         )
         return new_time
 
-    elif kline == 'Hour':
+    elif kline == 'H':
         remainder = timestamp.hour % aggregate
         # 检查是否已经是周期整点（分钟、秒、微秒全为0）
         if remainder == 0 and timestamp.minute == 0 and timestamp.second == 0 and timestamp.microsecond == 0:
@@ -74,7 +73,7 @@ def ceil_timestamp(timestamp: datetime, kline: str, aggregate: int) -> datetime:
         ) + timedelta(days=days)
         return new_time
 
-    elif kline == 'Day':
+    elif kline == 'D':
         if timestamp.hour == 0 and timestamp.minute == 0 and timestamp.second == 0 and timestamp.microsecond == 0:
             return timestamp
 
@@ -82,7 +81,7 @@ def ceil_timestamp(timestamp: datetime, kline: str, aggregate: int) -> datetime:
             hour=0, minute=0, second=0, microsecond=0
         )
 
-    elif kline == 'Week':
+    elif kline == 'W':
         days_to_add = (7 - timestamp.weekday()) % 7
         # 如果已经是周一0点且时间正确
         if days_to_add == 0 and timestamp.time() == datetime.min.time():
@@ -96,7 +95,7 @@ def ceil_timestamp(timestamp: datetime, kline: str, aggregate: int) -> datetime:
             hour=0, minute=0, second=0, microsecond=0
         ) + timedelta(days=days_to_add))
 
-    elif kline == 'Month':
+    elif kline == 'Mon':
         if timestamp.day == 1 and timestamp.time() == datetime.min.time():
             return timestamp
 
@@ -148,11 +147,11 @@ def mexc_create_request_queue(symbol: str,
     except ValueError:
         raise ValueError(f"聚合值必须是整数，收到的值：{aggregate}")
     #kline_duration = None
-    if kline == 'Min':
+    if kline == 'M':
         kline_duration = timedelta(minutes=agg)
-    elif kline == 'Hour':
+    elif kline == 'H':
         kline_duration = timedelta(hours=agg)
-    elif kline == 'Day':
+    elif kline == 'D':
         kline_duration = timedelta(days=agg)
     else:
         raise ValueError(f"无效的 kline 值：{kline}，应为 'minute'、'hour' 或 'day'。")
@@ -178,7 +177,7 @@ def mexc_create_request_queue(symbol: str,
     request_queue = []
 
     # 每次请求的最大限制
-    max_limit = 2
+    max_limit = 2000
 
     # 从结束时间开始向前迭代
     current_endtime = end_dt

@@ -6,7 +6,6 @@ from dexprice.modules.utilis.define import Config,TokenInfo,TokenPriceHistory,To
 import  dexprice.modules.utilis.define as define
 # 插入数据的函数
 
-
 class CexDatabaseInterface(ABC):
     # @abstractmethod
     # def insertpricehistory(self,tokenpricehistory):
@@ -80,28 +79,31 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
                 tokenid = self.FindParetokenid(name)
                 if tokenid:
                     if(OvhlFromCexData):
-                        ovhl = define.TokenPriceHistory(
+                        ovhl = define.CexTokenPriceHistory(
                             tokenid,
                             OvhlFromCexData.open,
                             OvhlFromCexData.high,
                             OvhlFromCexData.low,
                             OvhlFromCexData.close,
                             OvhlFromCexData.time,
-                            OvhlFromCexData.volume
+                            OvhlFromCexData.volume,
+                            OvhlFromCexData.amount
                         )
                         token_price_history_list.append(ovhl)
             return token_price_history_list
-        def insert_multiple_price_history(self, token_price_history_list:list[TokenPriceHistory]):
+        def insert_multiple_price_history(self, token_price_history_list:list[define.CexTokenPriceHistory]):
             table_name = "price_history"
             insert_query = f'''
-                INSERT INTO {table_name} (tokenid, openprice, highprice, lowprice, closeprice, time, volume)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO {table_name} (tokenid, openprice, highprice, lowprice, closeprice, time, volume,amount)
+                VALUES (?, ?, ?, ?, ?, ?, ?,?)
                 ON CONFLICT(tokenid, time) DO UPDATE SET
                     openprice = excluded.openprice,
                     highprice = excluded.highprice,
                     lowprice = excluded.lowprice,
                     closeprice = excluded.closeprice,
-                    volume = excluded.volume;
+                    volume = excluded.volume,
+                    amount = excluded.amount;
+
             '''
             data_to_insert = [
                 (
@@ -111,7 +113,8 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
                     history.low,
                     history.close,
                     history.time,
-                    history.volume
+                    history.volume,
+                    history.amount
                 )
                 for history in token_price_history_list
             ]
@@ -177,139 +180,7 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
                 if self.conn:
                     self.conn.close()
                     print("Database connection closed.")
-        # def insert_OvhlFromDex(self, OvhlFromDexData: define.OvhlFromDex):
-        #     pairaddress = OvhlFromDexData.pairaddress
-        #     tokenid = self.FindParetokenid(pairaddress)
-        #     if tokenid:
-        #         # 使用 OvhlFromDexData 的属性而不是下标访问
-        #         if(OvhlFromDexData):
-        #             ovhl = define.TokenPriceHistory(
-        #                 tokenid,
-        #                 OvhlFromDexData.open,
-        #                 OvhlFromDexData.high,
-        #                 OvhlFromDexData.low,
-        #                 OvhlFromDexData.close,
-        #                 OvhlFromDexData.time,
-        #                 OvhlFromDexData.volume
-        #             )
-        #             self.insertpricehistory(ovhl)
-        #
-        # def insertpricehistory(self, tokenpricehistory: define.TokenPriceHistory):
-        #     table_name = f"{self.chainid}_price_history"
-        #
-        #     # 检查是否已存在相同的记录
-        #     check_query = f'''
-        #     SELECT COUNT(*) FROM {table_name}
-        #     WHERE tokenid = ? AND time = ?;
-        #     '''
-        #     cursor = self.conn.cursor()
-        #     cursor.execute(check_query, (tokenpricehistory.tokenid, tokenpricehistory.time))
-        #     count = cursor.fetchone()[0]
-        #
-        #     # 如果记录不存在，则插入
-        #     if count == 0:
-        #         insert_query = f'''
-        #         INSERT INTO {table_name} (tokenid, openprice, highprice, lowprice, closeprice, time, volume)
-        #         VALUES (?, ?, ?, ?, ?, ?, ?);
-        #         '''
-        #         cursor.execute(insert_query, (tokenpricehistory.tokenid, tokenpricehistory.open, tokenpricehistory.high,
-        #                                       tokenpricehistory.low, tokenpricehistory.close, tokenpricehistory.time, tokenpricehistory.volume))
-        #         self.conn.commit()
-        #         print(f"Data inserted into {table_name} successfully.")
-        #     else:
-        #         print(f"Duplicate entry found for tokenid {tokenpricehistory.tokenid} at time {tokenpricehistory.time}. Skipping insertion.")
-        # def insertMultipricehistory(self, tokenpricehistorys:list[define.TokenPriceHistory]):
-        #     table_name = f"{ self.chainid }_price_history"
-        #     for tokenpricehistory in tokenpricehistorys:
-        #         self.insertpricehistory(tokenpricehistory)
-        #
-        #
-        # # print(f"Data inserted into {table_name} successfully.")
-        # def insertMultipricedexscreen(self, TokenInfos:list[define.TokenInfo]):
-        #     for token in TokenInfos:
-        #         self.insertpricedexscreen(token)
 
-        # get the price from the dexscreen
-        # def insertpricedexscreen(self, TokenInfo:define.TokenInfo):
-        #     table_name = f"{self.chainid}_pricedexscreen"
-        #
-        #     # 检查表是否存在，不存在则创建
-        #     create_table_query = f'''
-        #         CREATE TABLE IF NOT EXISTS {table_name} (
-        #             tokenid INTEGER,  -- tokenid 可以重复
-        #             price REAL,
-        #             time TEXT
-        #         );
-        #     '''
-        #
-        #     # 确保表已创建
-        #     cursor = self.conn.cursor()
-        #     cursor.execute(create_table_query)
-        #
-        #
-        #     tokenid =  self.FindCAtokenid( TokenInfo)
-        #
-        #
-        #     # 插入数据的 SQL 语句
-        #     insert_query = f'''
-        #         INSERT INTO {table_name} (tokenid, price, time)
-        #         VALUES (?, ?, ?);
-        #     '''
-        #
-        #     # 执行插入操作
-        #     cursor.execute(insert_query, (
-        #         tokenid,
-        #         TokenInfo.price_usd,
-        #         TokenInfo.timestamp
-        #     ))
-        #
-        #     # 提交事务并关闭游标
-        #     self.conn.commit()
-        #     print(f"Data inserted into {table_name} successfully.")
-        # def getpricedexscreen(self,  tokenid: int):
-        #     """
-        # 根据给定的 tokenid 从 pricedexscreen 表中检索所有价格记录。
-        #
-        # :param tokenid: 要查询的 tokenid
-        # :return: 包含 (price, time) 元组的列表，每个元组对应一条价格记录
-        # """
-        #     table_name = f"{self.chainid}_pricedexscreen"
-        #     select_query = f'''
-        #         SELECT price, time
-        #         FROM {table_name}
-        #         WHERE tokenid = ?;
-        #     '''
-        #
-        #     cursor = self.conn.cursor()
-        #     cursor.execute(select_query, (tokenid,))
-        #     rows = cursor.fetchall()  # 获取所有符合条件的记录
-        #
-        #     # 将查询结果转换成 (price, time) 的列表并返回
-        #     price_records = [(tokenid,row[0], row[1]) for row in rows]
-        #
-        #     return price_records
-        #
-        # def FindCAtokenid(self, TokenInfo:define.TokenInfo):
-        #     """
-        #     根据 TokenInfo 的 address (CA) 查找对应的 id。
-        #
-        #     :param token_info: TokenInfo 对象，包含 address 字段
-        #     :return: 返回对应的 id，若未找到则返回 None
-        #     """
-        #     table_name = 'token_pairs'
-        #     CA = TokenInfo.address
-        #     if self.cursor is None:
-        #         self.cursor = self.conn.cursor()
-        #
-        #     # 查询 token_pairs 表中与 CA 匹配的 id
-        #     query = f"SELECT id FROM {table_name} WHERE ca = ?"
-        #     self.cursor.execute(query, (CA,))
-        #     result = self.cursor.fetchone()
-        #
-        #     if result:
-        #         return result[0]  # 返回找到的 id
-        #     else:
-        #         return None  # 如果找不到则返回 None
         def FindParetokenid(self, name:str):
             """
             根据 TokenInfo 的 address (CA) 查找对应的 id。
@@ -476,6 +347,7 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
             closeprice REAL,
             time TEXT,
             volume REAL,
+            amount REAL,
             UNIQUE(tokenid, time)
             );
             '''
@@ -557,46 +429,7 @@ class   CexSQLiteDatabase(CexDatabaseInterface):
                 # 如果没有找到匹配的记录，返回 None
                 cursor.close()
                 return None
-        # def readprice(self, tokenid: float) -> list[TokenPriceHistory]:
-        #     table_name = f"{self.chainid}_price_history"
-        #
-        #     select_query = f'''
-        #     SELECT tokenid, openprice, highprice, lowprice, closeprice, time, volume
-        #     FROM {table_name}
-        #     WHERE tokenid = ?;
-        #     '''
-        #
-        #     cursor = self.conn.cursor()
-        #     cursor.execute(select_query, (tokenid,))
-        #     rows = cursor.fetchall()
-        #
-        #     self.conn.commit()
-        #     print(f"Data retrieved from {table_name} successfully.")
-        #
-        #     # 将查询结果初始化为 TokenPriceHistory 实例列表
-        #     token_price_history_list = [
-        #         TokenPriceHistory(
-        #             tokenid=row[0],
-        #             open=row[1],
-        #             high=row[2],
-        #             low=row[3],
-        #             close=row[4],
-        #             time=row[5],
-        #             volume=row[6]
-        #         ) for row in rows
-        #     ]
-        #
-        #     return token_price_history_list
 
-
-
-
-
-        # def retrieve_token_price_history(db,Tokendb:Tokendb):
-        #     tokenid= Tokendb.tokenid
-        #     tokenprice = db.readprice(tokenid)
-        #     #    print(tokenprice)
-        #     return tokenprice
 
 
         # tokendis: [1 3 5]

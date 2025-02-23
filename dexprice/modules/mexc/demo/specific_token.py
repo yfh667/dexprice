@@ -7,9 +7,11 @@ import dexprice.modules.utilis.findroot as findroot
 import dexprice.modules.mexc.initial_timesta as initial_timesta
 import dexprice.modules.mexc.initial_timesta_parall as initial_timesta_parall
 import dexprice.modules.proxy.proxymultitheread as proxymultitheread
-import dexprice.modules.mexc.mexcovhl_parall as mexcovhl_parall
-import dexprice.modules.mexc.mexc_queue as mexc_queue
+import dexprice.modules.utilis.timedefine as timedefine
+from dexprice.three import creattime
 import dexprice.modules.OHLCV.one_geck as one_geck
+import dexprice.modules.mexc.mexc_queue as mexc_queue
+import dexprice.modules.mexc.mexcovhl_parall as mexcovhl_parall
 
 if __name__ == '__main__':
 
@@ -19,14 +21,48 @@ if __name__ == '__main__':
     DATA_FOLDER = os.path.join(PROJECT_ROOT, "Data")
 
     db_folder = DATA_FOLDER + '/cex'  # 数据库存储文件夹
-    db_name = "mexc_contract_OVHL_TEST" + '.db'  # 数据库文件名
-    db = cexdb.CexSQLiteDatabase(db_folder, db_name)
+    db_name_raw = "spot_main" + '.db'  # 数据库文件名
+    flag = 0
+    db_mubiao_name = "myspot" + '.db'
+
+
+
+
+    db = cexdb.CexSQLiteDatabase(db_folder, db_name_raw)
 
     db.connect()
 
-   # symbol = getalltoken.getalltoken()
-   # symbol  = ['BTC','SOL']
-   # tokens = []
+    tokens = db.readdbtoken()
+
+    creattime_want = one_geck.datetime_to_timestamp(2024, 2, 20, 0, 0, 0, is_utc=True)
+
+    usetoken = []
+    for token in tokens:
+
+
+        creattime_token = timedefine.datetime_to_timestamp_str(token.creattime)
+        if(creattime_token>creattime_want ):
+            usetoken.append(token)
+    print (usetoken)
+    db.close()
+
+
+   # db_mubiao_name = "myspot" + '.db'
+    db = cexdb.CexSQLiteDatabase(db_folder, db_mubiao_name)
+    db.connect()
+    db.insert_Multidata(usetoken)
+
+    start_timestamp =creattime_want
+    end_timestamp = timedefine.get_current_utc_timestemp()
+
+    kline = 'D'
+    aggregate =1
+    queues = []
+
+    for token in usetoken:
+        queue = mexc_queue.mexc_create_request_queue(token.name, start_timestamp, end_timestamp, kline, aggregate)
+        queues.extend(queue)
+
 
     rate =0.3
     capacity = 20
@@ -38,33 +74,23 @@ if __name__ == '__main__':
 
 
     proxys = proxymultitheread.get_one_ip_proxy_multithread(startport, clash_api_url, headers)
-    symbol = 'BTC_USDT'
-    # 生成开始和结束时间的时间戳
-    start_timestamp = one_geck.datetime_to_timestamp(2025, 2, 20, 0, 0, 0, is_utc=True)
-    end_timestamp = one_geck.datetime_to_timestamp(2025, 2, 20, 3, 0, 0, is_utc=True)
-
-    kline = 'Min'
-    aggregate = '60'
-
-    queue = mexc_queue.mexc_create_request_queue(symbol, start_timestamp, end_timestamp, kline, aggregate)
-    print(queue)
-
-
-
     task_manager = mexcovhl_parall.MexcOvhlTaskManager(
-        queue,
+        queues,
         proxys,
         rate,
         capacity,
         max_threads_per_proxy,
-
+        flag
     )
-    results, failed_tasks = task_manager.run()
-    print(results)
 
+
+    results, failed_tasks = task_manager.run()
+   # print(results)
 
     # 打印实例属性
     token_price_history_list = db.collect_ovhl_data(results)
     db.insert_multiple_price_history(token_price_history_list)
 
+
     db.close()
+

@@ -16,7 +16,7 @@ import dexprice.modules.mexc.mexc_queue as mexc_queue
 import dexprice.modules.mexc.mexcovhl as mexcovhl
 
 class MexcOvhlTaskManager:
-    def __init__(self, mexcqueue:list[mexc_queue.mexc_create_request_queue], proxies, rate, capacity, max_threads_per_proxy):
+    def __init__(self, mexcqueue:list[mexc_queue.mexc_create_request_queue], proxies, rate, capacity, max_threads_per_proxy,flag):
         self.task_queue = Queue()
         self.failed_tasks = Queue()
         self.results = []
@@ -29,7 +29,7 @@ class MexcOvhlTaskManager:
         self.threads = []
         self.stop_event = threading.Event()
         self.max_threads_per_proxy = max_threads_per_proxy
-
+        self.flag = flag
         # 计算总任务数（批次数量）
 
         self.total_tasks = math.ceil(len(mexcqueue) / self.batch_size)
@@ -160,7 +160,7 @@ class MexcOvhlTaskManager:
               #  tokens_info = geck.get_token_history2(self.chain_id, addressqueue.pool_address, addressqueue.kline, addressqueue.aggregate, addressqueue.before_timestamp, addressqueue.limit, "usd", "base",  proxy.port)
                 #tokens_info =  cexprice.get_token_history2(namequeue.name+'_USDT', namequeue.aggregate+namequeue.kline,  namequeue.limit,  int(namequeue.before_timestamp), proxy.port)
 
-                historydatas = mexcovhl.mexc_token_history_queue( queue, proxy.port)
+                historydatas = mexcovhl.mexc_token_history_queue( queue, proxy.port,self.flag)
 
                # creattime =  initial_timesta.determine_initial_timesta(symbol, proxy.port)
                #  token = define.CexTokenInfo(
@@ -178,7 +178,8 @@ class MexcOvhlTaskManager:
             #             self.proxy_pool.remove_proxy(proxy)
             #     else:
                 with self.result_lock:
-                    self.results.extend(historydatas)
+                    if(len(historydatas) > 0):
+                        self.results.extend(historydatas)
                 success = True  # 请求成功，设置 success 为 True
             except Exception as e:
                 print(f"Exception occurred: {e}")
